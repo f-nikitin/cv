@@ -771,11 +771,7 @@
             clickable.forEach(function (card) {
                 card.classList.add('expanded');
             });
-
-            // и даём возможность сворачивать/разворачивать по нажатию
-            clickable.forEach(function (card) {
-                card.addEventListener('click', function () { card.classList.toggle('expanded'); });
-            });
+            // по нажатию НИЧЕГО не сворачиваем
         }
 
         var bubbleButtons = document.querySelectorAll('.btn-bubbles');
