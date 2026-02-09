@@ -474,7 +474,7 @@
 
         /* АДАПТИВ */
         @media (max-width: 768px) {
-            body { font-size: 15px; line-height: 1.5; }
+            body { font-size: 17px; line-height: 1.6; }
             header { padding: 10px 12px; }
             .container { padding: 0 12px; }
             .hero { padding: 110px 0 36px; }
@@ -766,6 +766,13 @@
 
         if (window.innerWidth <= 768) {
             var clickable = document.querySelectorAll('.expert-card, .job-card');
+
+            // на мобильных сразу раскрываем все карточки
+            clickable.forEach(function (card) {
+                card.classList.add('expanded');
+            });
+
+            // и даём возможность сворачивать/разворачивать по нажатию
             clickable.forEach(function (card) {
                 card.addEventListener('click', function () { card.classList.toggle('expanded'); });
             });
