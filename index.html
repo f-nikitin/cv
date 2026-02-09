@@ -382,11 +382,57 @@
             color: var(--gold);
         }
 
-        .skills-group ul {
-            list-style: disc;
-            padding-left: 22px;
-            margin: 0;
+        /* Цветные маркеры для всех списков */
+        ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        
+        ul li {
+            position: relative;
+            padding-left: 25px;
+            margin-bottom: 12px;
             color: var(--gray);
+        }
+        
+        ul li::before {
+            content: '•';
+            position: absolute;
+            left: 0;
+            color: var(--gold);
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+        
+        .skills-group ul {
+            list-style: none;
+            padding-left: 0;
+            margin: 0;
+        }
+        
+        .skills-group ul li {
+            position: relative;
+            padding-left: 25px;
+            margin-bottom: 12px;
+            color: var(--gray);
+        }
+        
+        .skills-group ul li::before {
+            content: '•';
+            position: absolute;
+            left: 0;
+            color: var(--gold);
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+        
+        /* Отступы между параграфами */
+        p {
+            margin-bottom: 15px;
+        }
+        
+        p:last-child {
+            margin-bottom: 0;
         }
 
         @media (max-width: 768px) {
@@ -688,7 +734,6 @@
         <div class="timeline">
             <div class="job-card neon-hover btn-bubbles">
                 <div class="job-icon">⭐</div>
-                <h3 style="color: var(--gold);" class="wave-text">Ключевые компетенции</h3>
                 <div class="job-body">
                     <ul style="color: var(--gray); padding-left: 20px;">
                         <li>Планирование и защита бюджета департамента.</li>
