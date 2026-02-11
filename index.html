@@ -49,6 +49,10 @@
             object-fit: cover;
         }
 
+        /* Не допускать, чтобы видео или аватар расширяли страницу по горизонтали */
+        .hero { overflow: hidden; }
+        .avatar, .video-bg-container video { max-width: 100vw; box-sizing: border-box; }
+
         .video-overlay {
             position: fixed;
             top: 0;
@@ -59,9 +63,16 @@
             z-index: -1;
         }
 
-        /* Убираем синий артефакт при нажатии на мобильных */
-        * {
+        /* Убираем синий артефакт при нажатии на мобильных и задаём box-sizing */
+        * , *::before, *::after {
+            box-sizing: border-box;
             -webkit-tap-highlight-color: transparent;
+        }
+
+        /* Убираем горизонтальную прокрутку на мобильных */
+        html, body {
+            max-width: 100%;
+            overflow-x: hidden;
         }
 
         /* ЭФФЕКТЫ ХОВЕРА */
@@ -117,8 +128,9 @@
         .container {
             position: relative;
             max-width: 1100px;
+            width: 100%;
             margin: 0 auto;
-            padding: 0 20px;
+            padding: 0 18px;
             z-index: 1;
         }
 
@@ -314,9 +326,17 @@
             float: right;
             border: 1px solid var(--gold);
             color: var(--gold);
-            padding: 5px 15px;
+            padding: 8px 18px;
             border-radius: 20px;
             font-size: 0.9rem;
+            font-weight: 700;
+            /* лёгкое мигание */
+            animation: date-blink 1.4s ease-in-out infinite;
+        }
+
+        @keyframes date-blink {
+            0%, 100% { opacity: 1; transform: translateY(0); }
+            50% { opacity: 0.65; transform: translateY(-1px); }
         }
 
         /* ГАЛЕРЕЯ */
@@ -439,15 +459,27 @@
             .skills {
                 margin: 50px 0 30px;
             }
-
-            .skills h2 {
-                font-size: 1.6rem;
-                margin-bottom: 24px;
-            }
+            .avatar { width: 120px; height: 120px; }
+            .container { padding: 0 10px; }
+            .hero { padding: 70px 8px 18px; }
+            /* Прячем визуальные эффекты, которые могут вызывать сдвиги */
+            .gallery img:hover { transform: scale(1.05); }
+            .nav a { padding: 8px 12px; }
 
             .skills-group {
                 padding: 20px 18px 14px;
             }
+
+            /* Общая мобильная оптимизация для портретного режима */
+            html, body { font-size: 16px; }
+            header { padding: 10px 12px; }
+            .hero { padding: 110px 8px 30px; overflow: hidden; }
+            .avatar { width: 150px; height: 150px; }
+            .tagline { font-size: 1rem; }
+            .btn-main, .btn-sec { padding: 14px 18px; }
+            .gallery img { height: 100px; }
+            .video-bg-container { left: 0; right: 0; }
+            .avatar.zoomed { transform: scale(1.6); }
         }
 
         .avatar.zoomed {
@@ -569,7 +601,7 @@
 <body>
 
 <div class="video-bg-container">
-    <video autoplay muted loop playsinline poster="bg-poster.jpg" preload="none">
+    <video id="heroVideo" autoplay muted loop playsinline poster="bg-poster.jpg" preload="none">
         <source src="background.mp4" type="video/mp4">
     </video>
 </div>
@@ -587,6 +619,7 @@
 <div class="container" id="home">
     <section class="hero">
         <video
+            id="avatarVideo"
             src="my video.mp4"
             class="avatar"
             playsinline
@@ -619,7 +652,7 @@
                 <p style="margin-top:20px; font-weight:600;">Ключевые направления:</p>
                 <ul style="color: var(--gray); padding-left: 20px;">
                     <li>Диспетчерский центр: круглосуточный мониторинг, контроль исполнения работ</li>
-                    <li>Экспертная поддержка: техническое консультирование техников</li>
+                    <li>Экспертная поддержка: помощь специалистов в сложных ремонтах штатным и аутсорсинговым командам по всей РФ</li>
                     <li>Сервисный центр: ремонт оборудования любой сложности</li>
                     <li>Закупки и логистика: тендеры, склад с распределенной логистикой по всей РФ</li>
                     <li>Подготовка и размещение терминалов по всей РФ (включая труднодоступные локации) с выбором оптимального подрядчика</li>
@@ -810,20 +843,32 @@
         }
 
         if (avatar) {
+            // По клику — увеличить и начать воспроизведение сразу
             avatar.addEventListener('click', function () {
-                // если это видео — по клику запускаем/останавливаем
                 if (avatar.tagName === 'VIDEO') {
-                    if (avatar.paused) {
-                        avatar.play();
-                    } else {
-                        avatar.pause();
-                    }
+                    var p = avatar.play();
+                    if (p && p.catch) p.catch(function() { /* autoplay может быть заблокирован — ждём взаимодействия */ });
                 }
 
-                if (avatar.classList.contains('zoomed')) return;
+                // добавляем эффект увеличения (если уже увеличен — оставляем)
                 avatar.classList.add('zoomed');
-                setTimeout(function () { avatar.classList.remove('zoomed'); }, 6000);
             });
+
+            // Когда видео закончилось — возвращаем круг в исходное состояние
+            if (avatar.tagName === 'VIDEO') {
+                avatar.addEventListener('ended', function () {
+                    avatar.classList.remove('zoomed');
+                });
+
+                // Если пользователь вручную поставил на паузу до окончания — тоже возвращаем
+                avatar.addEventListener('pause', function () {
+                    if (avatar.currentTime > 0 && !avatar.ended) {
+                        avatar.classList.remove('zoomed');
+                    }
+                });
+            }
+
+            // Автозапуск фона — только для фонового видео (avatar воспроизводится только по клику на нём)
         }
 
         if (window.innerWidth <= 768) {
@@ -864,12 +909,43 @@
                 bubbleInterval = setInterval(createAndAnimate, 120);
                 createAndAnimate();
             });
-            btn.addEventListener('mouseleave', function() {
-                clearInterval(bubbleInterval);
-                bubbles.forEach(function(b) { if (b.parentNode) b.parentNode.removeChild(b); });
-                bubbles = [];
+                btn.addEventListener('mouseleave', function() {
+                    clearInterval(bubbleInterval);
+                    bubbles.forEach(function(b) { if (b.parentNode) b.parentNode.removeChild(b); });
+                    bubbles = [];
+                });
             });
-        });
+
+            // --- Автовозобновление только фонового видео `heroVideo` после простоя/смены вкладки ---
+            (function() {
+                var bg = document.getElementById('heroVideo');
+                if (!bg || bg.tagName !== 'VIDEO') return;
+
+                function tryPlay() {
+                    if (!bg.paused && !bg.ended) return;
+                    var p = bg.play();
+                    if (p && p.catch) p.catch(function() { /* autoplay blocked — ждём взаимодействия */ });
+                }
+
+                // При возврате видимости пытаемся воспроизвести
+                document.addEventListener('visibilitychange', function() {
+                    if (!document.hidden) tryPlay();
+                });
+
+                // При фокусе окна
+                window.addEventListener('focus', tryPlay);
+
+                // При любом взаимодействии пользователя — попробуем запустить фон
+                ['pointerdown','touchstart','click','mousemove','scroll','keydown'].forEach(function(ev){
+                    window.addEventListener(ev, tryPlay, {passive:true});
+                });
+
+                // Периодические попытки после простоя (останавливаем, если играет)
+                var retryInterval = setInterval(function() {
+                    if (bg.paused) tryPlay(); else { clearInterval(retryInterval); }
+                }, 3000);
+            })();
+
     });
 </script>
 
