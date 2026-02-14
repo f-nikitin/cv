@@ -27,7 +27,7 @@
             font-size: 19px;
         }
 
-        /* --- БЛОК ЖИВОГО ФОНА --- */
+        /* --- ФОНОВОЕ ИЗОБРАЖЕНИЕ --- */
         .video-bg-container {
             position: fixed;
             top: 0;
@@ -36,23 +36,16 @@
             height: 100%;
             z-index: -2;
             overflow: hidden;
+            background-image: url('background.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            background-repeat: no-repeat;
         }
 
-        .video-bg-container video {
-            min-width: 100%;
-            min-height: 100%;
-            width: auto;
-            height: auto;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            object-fit: cover;
-        }
-
-        /* Не допускать, чтобы видео или аватар расширяли страницу по горизонтали */
+        /* Не допускать, чтобы аватар расширял страницу по горизонтали */
         .hero { overflow: hidden; }
-        .avatar, .video-bg-container video { max-width: 100vw; box-sizing: border-box; }
+        .avatar { max-width: 100vw; box-sizing: border-box; }
 
         .video-overlay {
             position: fixed;
@@ -651,11 +644,7 @@
 </head>
 <body>
 
-<div class="video-bg-container">
-    <video id="heroVideo" autoplay muted loop playsinline poster="bg-poster.jpg" preload="none">
-        <source src="background.mp4" type="video/mp4">
-    </video>
-</div>
+<div class="video-bg-container"></div>
 <div class="video-overlay"></div>
 
 <header>
@@ -679,9 +668,8 @@
             poster="my photo.jpg"
         ></video>
         <h1>Привет! Я <span>Фёдор</span></h1>
-        <p class="tagline-hand">Если вы оказались на этой странице, значит, мы уже знакомы лично или через общих знакомых.
-Сейчас я ищу работу и открыт к разным предложениям.
-Не ограничиваюсь прежней сферой - рассматриваю и другие варианты</p>
+        <p class="tagline-hand">Если вы оказались на этой странице, значит, мы уже знакомы лично или через общие контакты.
+Сейчас я ищу работу и открыт к разным предложениям, не ограничиваюсь прежней сферой</p>
 
         <div class="btn-group">
             <a href="#experience" class="btn-sec neon-hover">Смотреть краткое резюме</a>
@@ -885,7 +873,7 @@
 </div>
 
 <footer style="text-align: center; padding: 60px 0; color: var(--gray); border-top: 1px solid rgba(255,255,255,0.1); position: relative; z-index: 1;">
-     © 2026 Никитин Фёдор. Компетенции открыты для инвестиций в крутые проекты
+     © 2026 Никитин Фёдор и группа ИИ. Компетенции открыты для инвестиций в крутые проекты
 	 <p><strong>Резюме свободно для распространения.</strong> Согласие на обработку ПДн третьим лицам для трудоустройства дано.</p>
 <p>Дата: 06.02.2026. Никитин Фёдор.</p>
 </footer>
