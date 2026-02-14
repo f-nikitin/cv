@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Никитин Фёдор — Резюме</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg: #03211a;
@@ -138,6 +139,9 @@
         .hero {
             text-align: center;
             padding: 160px 0 60px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
         .avatar {
@@ -175,16 +179,38 @@
         h1 span { color: var(--gold); }
 
         .tagline {
-            background: linear-gradient(135deg, #ffcc33 0%, #ffd966 50%, #ffffff 100%);
+            background: linear-gradient(135deg, #60C1B8 0%, #73D0F2 55%, #ffffff 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            font-size: 1.5rem;
+            font-size: 1.8rem;
             font-weight: 500;
-            margin-bottom: 40px;
-            text-shadow: 0 0 20px rgba(255, 204, 51, 0.3);
-            line-height: 1.7;
-            letter-spacing: 0.3px;
+            margin-bottom: 36px;
+            text-shadow: 0 0 14px rgba(115, 208, 242, 0.18);
+            line-height: 1.6;
+            letter-spacing: 0.2px;
+        }
+
+        /* Handwritten-style tagline (replaces image) */
+        .tagline-hand {
+            font-family: 'Montserrat', sans-serif;
+            color: var(--text);
+            font-size: 1.8rem;
+            max-width: 720px;
+            margin: 18px auto 36px;
+            line-height: 1.25;
+            text-align: center;
+            white-space: pre-line;
+            background: transparent;
+            font-weight: 400;
+        }
+
+        @media (max-width: 768px) {
+            .tagline-hand { font-size: 1.05rem; max-width: 92%; margin: 14px auto 26px; }
+        }
+
+        @media (max-width: 480px) {
+            .tagline-hand { font-size: 0.95rem; max-width: 95%; margin: 12px auto 20px; }
         }
 
         .btn-group {
@@ -337,6 +363,19 @@
         @keyframes date-blink {
             0%, 100% { opacity: 1; transform: translateY(0); }
             50% { opacity: 0.65; transform: translateY(-1px); }
+        }
+
+        /* Анимация появления при прокрутке */
+        .animate-on-scroll {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 1.4s ease, transform 1.4s ease;
+            will-change: opacity, transform;
+        }
+
+        .animate-on-scroll.visible {
+            opacity: 1;
+            transform: translateY(0);
         }
 
         /* ГАЛЕРЕЯ */
@@ -541,7 +580,7 @@
             .avatar { width: 140px; height: 140px; }
             .nav { display: none; }
             h1 { font-size: 1.4rem; line-height: 1.3; }
-            .tagline { font-size: 0.8rem; margin-bottom: 22px; line-height: 1.3; }
+            .tagline { font-size: 1.05rem; margin-bottom: 22px; line-height: 1.3; }
             .expert-grid { grid-template-columns: 1fr; gap: 12px; margin: 35px 0; }
             .expert-card { padding: 20px; }
             .expert-card h4 { font-size: 0.9rem; margin-bottom: 8px; }
@@ -593,7 +632,7 @@
             .hero { padding: 90px 6px 20px; }
             .avatar { width: 120px; height: 120px; }
             h1 { font-size: 1.2rem; }
-            .tagline { font-size: 0.75rem; margin-bottom: 18px; }
+            .tagline { font-size: 0.95rem; margin-bottom: 18px; }
         }
     </style>
     <!-- Yandex.Metrika counter -->
@@ -629,7 +668,7 @@
 </header>
 
 <div class="container" id="home">
-    <section class="hero">
+    <section class="hero animate-on-scroll">
         <video
             id="avatarVideo"
             src="my video.mp4"
@@ -640,7 +679,9 @@
             poster="my photo.jpg"
         ></video>
         <h1>Привет! Я <span>Фёдор</span></h1>
-        <p class="tagline">Открыт к предложениям по работе в разных направлениях. Быстро вникаю в новое - не зациклен на прошлом опыте.</p>
+        <p class="tagline-hand">Если вы оказались на этой странице, значит, мы уже знакомы лично или через общих знакомых.
+Сейчас я ищу работу и открыт к разным предложениям.
+Не ограничиваюсь прежней сферой - рассматриваю и другие варианты</p>
 
         <div class="btn-group">
             <a href="#experience" class="btn-sec neon-hover">Смотреть краткое резюме</a>
@@ -653,9 +694,9 @@
         </div>
     </section>
 
-    <h2 id="experience" style="text-align: center; margin: 80px 0 50px;">Мой 20-летний опыт работы в платежных системах</h2>
-    <div class="timeline">
-        <div class="job-card neon-hover btn-bubbles">
+    <h2 id="experience" class="animate-on-scroll" style="text-align: center; margin: 80px 0 50px;">Мой 20-летний опыт работы в платежных системах</h2>
+    <div class="timeline animate-on-scroll">
+        <div class="job-card neon-hover btn-bubbles animate-on-scroll">
             <div class="job-icon">💼</div>
             <div class="date-badge">Май 2013 — Декабрь 2025</div>
             <h3 style="color: var(--gold);" class="wave-text"><a href="https://www.elecsnet.ru" target="_blank" style="color: var(--gold); text-decoration: none; cursor: pointer; transition: opacity 0.3s ease;">ГК «Элекснет»</a></h3>
@@ -695,7 +736,7 @@
             </div>
         </div>
 
-        <div class="job-card neon-hover btn-bubbles">
+        <div class="job-card neon-hover btn-bubbles animate-on-scroll">
             <div class="job-icon">🧪</div>
             <div class="date-badge">Март 2009 — Май 2013</div>
             <h3 style="color: var(--gold);" class="wave-text">ООО «ЦЕНТР-СЕРВИС»</h3>
@@ -708,7 +749,7 @@
             </div>
         </div>
 
-        <div class="job-card neon-hover btn-bubbles">
+        <div class="job-card neon-hover btn-bubbles animate-on-scroll">
             <div class="job-icon">🎧</div>
             <div class="date-badge">Февраль 2007 — Март 2009</div>
             <h3 style="color: var(--gold);" class="wave-text">ООО «Элекснет Сервис»</h3>
@@ -721,7 +762,7 @@
             </div>
         </div>
 
-        <div class="job-card neon-hover btn-bubbles">
+        <div class="job-card neon-hover btn-bubbles animate-on-scroll">
             <div class="job-icon">🛠</div>
             <div class="date-badge">Август 2005 — Февраль 2007</div>
             <h3 style="color: var(--gold);" class="wave-text">ООО «Элекснет Сервис»</h3>
@@ -735,8 +776,8 @@
         </div>
     </div>
 
-    <div class="expert-grid">
-        <div class="expert-card neon-hover btn-bubbles">
+    <div class="expert-grid animate-on-scroll">
+        <div class="expert-card neon-hover btn-bubbles animate-on-scroll">
             <div class="icon-box">
                 <svg viewBox="0 0 24 24" aria-hidden="true">
                     <rect x="5" y="6" width="14" height="4" rx="1"></rect>
@@ -748,7 +789,7 @@
                 <p>Обеспечивал бесперебойную работу (SLA 98+%) оборудования (до 10 000+ единиц) по всей территории РФ. Силами команды до 100 человек (+Аутсорс).</p>
             </div>
         </div>
-        <div class="expert-card neon-hover btn-bubbles">
+        <div class="expert-card neon-hover btn-bubbles animate-on-scroll">
             <div class="icon-box">
                 <svg viewBox="0 0 24 24" aria-hidden="true">
                     <path d="M5 15l4-4 4 3 6-9"></path>
@@ -760,7 +801,7 @@
                 <p>Обеспечивал максимальную доступность сервиса для клиента при минимальных операционных издержках.</p>
             </div>
         </div>
-        <div class="expert-card neon-hover btn-bubbles">
+        <div class="expert-card neon-hover btn-bubbles animate-on-scroll">
             <div class="icon-box">
                 <svg viewBox="0 0 24 24" aria-hidden="true">
                     <path d="M14.5 5.5a4 4 0 0 0-5.66 4.72L4 15l2.5 2.5L11 12.9a4 4 0 0 0 4.7-5.65L14 9l-3-3 3.5-0.5z"></path>
@@ -774,10 +815,10 @@
         </div>
     </div>
 
-    <section class="skills" id="skills">
+    <section class="skills animate-on-scroll" id="skills">
         <h2>Навыки</h2>
         <div class="timeline">
-            <div class="job-card neon-hover btn-bubbles">
+            <div class="job-card neon-hover btn-bubbles animate-on-scroll">
                 <div class="job-icon">⭐</div>
                 <div class="job-body">
                     <ul style="color: var(--gray); padding-left: 20px;">
@@ -796,13 +837,13 @@
         </div>
     </section>
 
-    <div id="contacts" style="text-align: center;">
+    <div id="contacts" class="animate-on-scroll" style="text-align: center;">
         <h2 style="font-size: 3rem; margin-bottom: 10px;">Давайте обсудим!</h2>
         <p style="color: var(--gray); font-size: 1.3rem; margin-bottom: 50px;">Открыт к предложениям о работе и сотрудничеству</p>
     </div>
 
-    <div class="contact-row">
-        <a href="mailto:fonikitin@bk.ru" class="c-card neon-hover btn-bubbles">
+    <div class="contact-row animate-on-scroll">
+        <a href="mailto:fonikitin@bk.ru" class="c-card neon-hover btn-bubbles animate-on-scroll">
             <div class="icon-sq">
                 <svg viewBox="0 0 24 24" aria-hidden="true">
                     <rect x="4" y="6" width="16" height="12" rx="2"></rect>
@@ -812,7 +853,7 @@
             <span class="c-card-label wave-text">Email</span>
             <span class="c-card-value wave-text">fonikitin@bk.ru</span>
         </a>
-        <a href="tel:+79629350854" class="c-card neon-hover btn-bubbles">
+        <a href="tel:+79629350854" class="c-card neon-hover btn-bubbles animate-on-scroll">
             <div class="icon-sq">
                 <svg viewBox="0 0 24 24" aria-hidden="true">
                     <path d="M6.5 4.5L9 4l2 4-2 1.5a10 10 0 0 0 5.5 5.5L16 13l4 2-0.5 2.5c-0.2 1-1 1.8-2 2-2.3.4-6.2-.8-9.1-3.7S3.6 8.8 4 6.5c.2-1 .9-1.8 2.5-2z"></path>
@@ -821,7 +862,7 @@
             <span class="c-card-label wave-text">Телефон</span>
             <span class="c-card-value wave-text">+7 (962) 935-08-54</span>
         </a>
-        <a href="https://t.me/Fedorclick" target="_blank" class="c-card neon-hover btn-bubbles">
+        <a href="https://t.me/Fedorclick" target="_blank" class="c-card neon-hover btn-bubbles animate-on-scroll">
             <div class="icon-sq">
                 <svg viewBox="0 0 24 24" aria-hidden="true">
                     <path d="M21 4L11 14"></path>
@@ -830,6 +871,15 @@
             </div>
             <span class="c-card-label wave-text">Telegram</span>
             <span class="c-card-value wave-text">@Fedorclick</span>
+        </a>
+        <a href="https://www.linkedin.com/in/fedor-nikitin-0384234a" target="_blank" class="c-card neon-hover btn-bubbles animate-on-scroll">
+            <div class="icon-sq">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <text x="4" y="18" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="currentColor">in</text>
+                </svg>
+            </div>
+            <span class="c-card-label wave-text">LinkedIn</span>
+            <span class="c-card-value wave-text">Фёдор Никитин</span>
         </a>
     </div>
 </div>
@@ -842,6 +892,24 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
+        // --- Intersection Observer для анимации появления при прокрутке ---
+        var observer = new IntersectionObserver(function(entries) {
+            entries.forEach(function(entry) {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, {
+            threshold: 0.1
+        });
+
+        var animElements = document.querySelectorAll('.animate-on-scroll');
+        animElements.forEach(function(elem) {
+            observer.observe(elem);
+        });
+        // --- Конец Intersection Observer ---
+
         var avatar = document.querySelector('.avatar');
         if (avatar) {
             var setHold = function (on) {
