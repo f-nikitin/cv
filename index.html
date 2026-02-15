@@ -27,7 +27,7 @@
             font-size: 19px;
         }
 
-        /* --- ФОНОВОЕ ИЗОБРАЖЕНИЕ --- */
+        /* --- ФОНОВОЕ ВИДЕО --- */
         .video-bg-container {
             position: fixed;
             top: 0;
@@ -36,11 +36,17 @@
             height: 100%;
             z-index: -2;
             overflow: hidden;
-            background-image: url('background.jpg');
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-            background-repeat: no-repeat;
+            background: #000;
+        }
+
+        .video-bg-container video {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
         /* Не допускать, чтобы аватар расширял страницу по горизонтали */
@@ -142,11 +148,24 @@
             height: 230px;
             border-radius: 50%;
             border: 4px solid var(--gold);
-            object-fit: cover;
+            position: relative;
+            display: block;
+            margin: 0 auto 30px;
+            overflow: hidden;
             box-shadow: 0 0 40px rgba(255, 204, 51, 0.5);
-            margin-bottom: 30px;
             cursor: pointer;
             transition: transform 0.25s ease;
+        }
+
+        .avatar__video {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            object-position: center center;
+            display: block;
+            background: transparent;
         }
 
         .avatar:focus {
@@ -644,7 +663,11 @@
 </head>
 <body>
 
-<div class="video-bg-container"></div>
+<div class="video-bg-container">
+    <video autoplay muted loop playsinline>
+        <source src="background.mp4" type="video/mp4">
+    </video>
+</div>
 <div class="video-overlay"></div>
 
 <header>
@@ -658,15 +681,16 @@
 
 <div class="container" id="home">
     <section class="hero animate-on-scroll">
-        <video
-            id="avatarVideo"
-            src="my video.mp4"
-            class="avatar"
-            playsinline
-            muted
-            preload="metadata"
-            poster="my photo.jpg"
-        ></video>
+        <div class="avatar" role="button" tabindex="0" aria-label="Аватар — воспроизвести видео">
+            <video
+                id="avatarVideo"
+                src="my video.mp4"
+                class="avatar__video"
+                playsinline
+                muted
+                preload="metadata"
+            ></video>
+        </div>
         <h1>Привет! Я <span>Фёдор</span></h1>
         <p class="tagline-hand">Если вы оказались на этой странице, значит, мы уже знакомы лично или через общие контакты.
 Сейчас я ищу работу и открыт к разным предложениям, не ограничиваюсь прежней сферой</p>
@@ -873,7 +897,7 @@
 </div>
 
 <footer style="text-align: center; padding: 60px 0; color: var(--gray); border-top: 1px solid rgba(255,255,255,0.1); position: relative; z-index: 1;">
-     © 2026 Никитин Фёдор и группа ИИ. Компетенции открыты для инвестиций в крутые проекты
+     © 2026 Никитин Фёдор. Компетенции открыты для инвестиций в крутые проекты
 	 <p><strong>Резюме свободно для распространения.</strong> Согласие на обработку ПДн третьим лицам для трудоустройства дано.</p>
 <p>Дата: 06.02.2026. Никитин Фёдор.</p>
 </footer>
@@ -899,6 +923,7 @@
         // --- Конец Intersection Observer ---
 
         var avatar = document.querySelector('.avatar');
+        var avatarVideo = document.getElementById('avatarVideo');
         if (avatar) {
             var setHold = function (on) {
                 if (on) avatar.classList.add('hold');
@@ -911,10 +936,10 @@
         }
 
         if (avatar) {
-            // По клику — увеличить и начать воспроизведение сразу
+            // По клику — увеличить и начать воспроизведение сразу (играет реальный <video>)
             avatar.addEventListener('click', function () {
-                if (avatar.tagName === 'VIDEO') {
-                    var p = avatar.play();
+                if (avatarVideo && avatarVideo.tagName === 'VIDEO') {
+                    var p = avatarVideo.play();
                     if (p && p.catch) p.catch(function() { /* autoplay может быть заблокирован — ждём взаимодействия */ });
                 }
 
@@ -923,14 +948,14 @@
             });
 
             // Когда видео закончилось — возвращаем круг в исходное состояние
-            if (avatar.tagName === 'VIDEO') {
-                avatar.addEventListener('ended', function () {
+            if (avatarVideo && avatarVideo.tagName === 'VIDEO') {
+                avatarVideo.addEventListener('ended', function () {
                     avatar.classList.remove('zoomed');
                 });
 
                 // Если пользователь вручную поставил на паузу до окончания — тоже возвращаем
-                avatar.addEventListener('pause', function () {
-                    if (avatar.currentTime > 0 && !avatar.ended) {
+                avatarVideo.addEventListener('pause', function () {
+                    if (avatarVideo.currentTime > 0 && !avatarVideo.ended) {
                         avatar.classList.remove('zoomed');
                     }
                 });
