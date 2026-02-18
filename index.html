@@ -645,6 +645,22 @@
             h1 { font-size: 1.2rem; }
             .tagline { font-size: 0.95rem; margin-bottom: 18px; }
         }
+
+        /* Выровнять текст с эффектом появления слов: центрируем контейнер и ограничиваем ширину строки */
+        #typingText { text-align: center; }
+        #typingText .typing-words { display: inline-block; text-align: justify; max-width: 820px; width: 100%; line-height: 1.45; text-indent: 1.2em; -webkit-hyphens: auto; -ms-hyphens: auto; hyphens: auto; }
+        #typingText .typing-words .word { display: inline; margin-right: 0; white-space: normal; word-break: normal; opacity: 0; filter: blur(6px); transform: translateY(6px); transition: filter 360ms ease, opacity 360ms ease, transform 360ms cubic-bezier(.2,.9,.2,1); }
+        #typingText .typing-words .word.visible { opacity: 1; filter: blur(0); transform: translateY(0); }
+
+        /* Одноразовый прыжок для кнопок после показа текста */
+        .btn-jump { animation: jump-once 700ms cubic-bezier(.2,.9,.2,1); }
+        @keyframes jump-once {
+            0% { transform: translateY(0); }
+            20% { transform: translateY(-14px); }
+            45% { transform: translateY(0); }
+            65% { transform: translateY(-8px); }
+            100% { transform: translateY(0); }
+        }
     </style>
     <!-- Yandex.Metrika counter -->
     <script type="text/javascript">
@@ -1034,39 +1050,71 @@
                 }, 3000);
             })();
 
-        // --- Эффект набора текста при скролле ---
-        var typingText = document.getElementById('typingText');
-        var fullText = "Если вы находитесь на этой странице, значит, мы уже знакомы лично или через общие контакты. Сейчас я в поиске новой работы и готов рассмотреть различные предложения, не ограничиваясь прежней сферой деятельности. Очень буду благодарен за вашу помощь в этом процессе!";
-        var currentIndex = 0;
-        var isTyping = false;
+        // --- Показ текста ПО СЛОВАМ с лёгким всплывающим эффектом (при вхождении в область) ---
+        (function(){
+            var typingText = document.getElementById('typingText');
+            if (!typingText) return;
 
-        function typeNextCharacter() {
-            if (currentIndex < fullText.length && isTyping) {
-                var char = fullText[currentIndex];
-                if (char === '\n') {
-                    typingText.innerHTML += '<br>';
+            var fullText = "Если вы находитесь на этой странице, значит, мы уже знакомы лично или через общие контакты. Сейчас я в поиске новой работы и готов рассмотреть различные предложения, не ограничиваясь прежней сферой деятельности. Очень буду благодарен за вашу помощь в этом процессе!";
+
+            // Добавляем стиль для .word через <style>, чтобы не править <head> вручную
+            var style = document.createElement('style');
+            style.textContent = '\n                .typing-words .word { display: inline; opacity: 0; filter: blur(6px); transform: translateY(6px); transition: filter 360ms ease, opacity 360ms ease, transform 360ms cubic-bezier(.2,.9,.2,1); margin-right: 0; }\n                .typing-words .word.visible { opacity: 1; filter: blur(0); transform: translateY(0); }\n            ';
+            document.head.appendChild(style);
+
+            // Разбиваем текст на слова, сохраняя пробелы
+            var tokens = fullText.split(/(\s+)/);
+            typingText.innerHTML = '';
+            var wrapper = document.createElement('span');
+            wrapper.className = 'typing-words';
+            wrapper.lang = 'ru';
+            typingText.appendChild(wrapper);
+
+            var wordSpans = [];
+            tokens.forEach(function(tok) {
+                if (/^\s+$/.test(tok)) {
+                    // пробельный токен — добавляем обычный пробел
+                    wrapper.appendChild(document.createTextNode(' '));
                 } else {
-                    typingText.textContent += char;
-                }
-                currentIndex++;
-                setTimeout(typeNextCharacter, 25); // скорость набора
-            }
-        }
-
-        var typingObserver = new IntersectionObserver(function(entries) {
-            entries.forEach(function(entry) {
-                if (entry.isIntersecting && !isTyping && currentIndex === 0) {
-                    isTyping = true;
-                    typeNextCharacter();
+                    var span = document.createElement('span');
+                    span.className = 'word';
+                    span.textContent = tok;
+                    wrapper.appendChild(span);
+                    wordSpans.push(span);
                 }
             });
-        }, {
-            threshold: 0.3
-        });
 
-        if (typingText) {
-            typingObserver.observe(typingText);
-        }
+            // Показ по словам при вхождении в область
+            var shown = false;
+            var delay = 220; // задержка между словами в мс
+
+            var obs = new IntersectionObserver(function(entries) {
+                entries.forEach(function(entry){
+                    if (entry.isIntersecting && !shown) {
+                        shown = true;
+                        wordSpans.forEach(function(span, i){
+                            setTimeout(function(){
+                                span.classList.add('visible');
+                            }, i * delay);
+                        });
+
+                        // Триггерим одноразовый прыжок двух кнопок ниже после полного вывода слов
+                        var totalShowTime = wordSpans.length * delay + 420;
+                        setTimeout(function(){
+                            var buttons = document.querySelectorAll('.hero .btn-group a');
+                            buttons.forEach(function(btn){
+                                btn.classList.add('btn-jump');
+                                btn.addEventListener('animationend', function(){ btn.classList.remove('btn-jump'); }, { once: true });
+                            });
+                        }, totalShowTime);
+
+                        obs.unobserve(typingText);
+                    }
+                });
+            }, { threshold: 0.25 });
+
+            obs.observe(typingText);
+        })();
 
     });
 </script>
