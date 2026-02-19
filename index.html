@@ -4,6 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Никитин Фёдор — Резюме</title>
+    <meta name="description" content="Открыт к предложениям о работе и сотрудничеству.">
+    <link rel="canonical" href="https://dydyka11.github.io/FONikitin-Resume-Landing/">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://dydyka11.github.io/FONikitin-Resume-Landing/">
+    <meta property="og:title" content="Никитин Фёдор — Резюме">
+    <meta property="og:description" content="Открыт к предложениям о работе и сотрудничеству.">
+    <meta property="og:image" content="https://dydyka11.github.io/FONikitin-Resume-Landing/my%20photo.jpg">
+    <meta property="og:image:alt" content="Фото — Никитин Фёдор">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Никитин Фёдор — Резюме">
+    <meta name="twitter:description" content="Открыт к предложениям о работе и сотрудничеству.">
+    <meta name="twitter:image" content="https://dydyka11.github.io/FONikitin-Resume-Landing/my%20photo.jpg">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap" rel="stylesheet">
     <style>
@@ -530,8 +542,10 @@
 
         /* КОНТАКТЫ */
         .contact-row {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: stretch;
             gap: 25px;
             margin: 40px 0 100px;
         }
@@ -543,6 +557,7 @@
             text-align: center;
             text-decoration: none;
             color: white;
+            flex: 0 1 320px;
         }
 
         .icon-sq {
@@ -619,7 +634,7 @@
             .skills-group { padding: 18px 14px 12px; margin-bottom: 15px; }
             .skills-group h3 { font-size: 0.95rem; margin-bottom: 8px; }
             ul li { font-size: 0.8rem; margin-bottom: 7px; padding-left: 20px; }
-            .contact-row { grid-template-columns: 1fr; gap: 15px; margin-bottom: 60px; }
+            .contact-row { flex-direction: column; gap: 15px; margin-bottom: 60px; }
             .c-card { padding: 24px 14px; }
             .c-card-label { font-size: 0.8rem; }
             .c-card-value { font-size: 0.9rem; }
@@ -892,8 +907,15 @@
                     <path d="M21 4l-7 18-3-7-7-3 17-8z"></path>
                 </svg>
             </div>
-            <span class="c-card-label wave-text">Telegram</span>
-            <span class="c-card-value wave-text">@Fedorclick</span>
+            <span class="c-card-value wave-text">Telegram</span>
+        </a>
+        <a href="https://max.ru/u/f9LHodD0cOJVi8ozRnjQXsNgjsNBQIpNjqlxYQ35V9ESvxToKtF8as_AKPQ" target="_blank" rel="noopener noreferrer" class="c-card neon-hover btn-bubbles animate-on-scroll" aria-label="MAX: Я пользуюсь мессенджером MAX. Присоединяйся!">
+            <div class="icon-sq" aria-hidden="true">
+                <svg viewBox="0 0 24 24" aria-hidden="true" style="stroke-width: 1.0; transform: scale(1.12); transform-origin: 50% 50%;">
+                    <path d="M12 3.8c-4.86 0-8.8 3.43-8.8 7.67 0 2.25 1.1 4.34 2.95 5.78L6 20.2l2.77-1.54c.98.29 2.05.45 3.23.45 4.86 0 8.8-3.43 8.8-7.67S16.86 3.8 12 3.8Zm0 2.3c3.6 0 6.5 2.26 6.5 5.37 0 3.12-2.9 5.37-6.5 5.37-.92 0-1.78-.14-2.56-.4l-.74-.24-1.04.58.2-1.24-.52-.44c-1.35-1.15-2.1-2.6-2.1-4.2 0-3.11 2.9-5.37 6.5-5.37Z"></path>
+                </svg>
+            </div>
+            <span class="c-card-value wave-text">MAX</span>
         </a>
         <a href="https://www.linkedin.com/in/fedor-nikitin-0384234a" target="_blank" class="c-card neon-hover btn-bubbles animate-on-scroll">
             <div class="icon-sq">
@@ -901,8 +923,7 @@
                     <text x="4" y="18" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="currentColor">in</text>
                 </svg>
             </div>
-            <span class="c-card-label wave-text">LinkedIn</span>
-            <span class="c-card-value wave-text">Фёдор Никитин</span>
+            <span class="c-card-value wave-text">LinkedIn</span>
         </a>
     </div>
 </div>
