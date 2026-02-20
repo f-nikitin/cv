@@ -540,6 +540,122 @@
             box-shadow: 0 0 40px var(--neon);
         }
 
+        .presentation-backdrop {
+            position: fixed;
+            inset: 0;
+            z-index: 2400;
+            background: rgba(0, 0, 0, 0.85);
+            opacity: 0;
+            transition: opacity 3s ease;
+        }
+
+        .presentation-backdrop.open {
+            opacity: 1;
+        }
+
+        .presentation-modal {
+            position: fixed;
+            inset: 0;
+            z-index: 2500;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 18px;
+        }
+
+        .presentation-modal.open {
+            display: flex;
+        }
+
+        .presentation-card {
+            width: min(92vw, 980px);
+            max-height: 86vh;
+            position: relative;
+            z-index: 2501;
+        }
+
+        .presentation-card video {
+            width: 100%;
+            max-height: 86vh;
+            border-radius: 14px;
+            box-shadow: 0 0 40px var(--neon);
+            background: #000;
+            display: block;
+        }
+
+        .presentation-controls {
+            position: absolute;
+            left: 50%;
+            bottom: 10px;
+            transform: translateX(-50%);
+            display: none;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 12px;
+            border-radius: 12px;
+            background: rgba(0, 0, 0, 0.55);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            z-index: 2502;
+        }
+
+        .presentation-controls.open {
+            display: flex;
+        }
+
+        .presentation-controls button {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            background: rgba(255, 255, 255, 0.06);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .presentation-controls button svg {
+            width: 22px;
+            height: 22px;
+            stroke: #fff;
+            fill: none;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .presentation-progress {
+            width: min(50vw, 520px);
+            height: 6px;
+            appearance: none;
+            background: rgba(255, 255, 255, 0.25);
+            border-radius: 999px;
+            outline: none;
+        }
+
+        .presentation-progress::-webkit-slider-thumb {
+            appearance: none;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: #ffffff;
+            border: 2px solid rgba(0, 0, 0, 0.25);
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.25);
+            cursor: pointer;
+        }
+
+        .presentation-progress::-moz-range-thumb {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: #ffffff;
+            border: 2px solid rgba(0, 0, 0, 0.25);
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.25);
+            cursor: pointer;
+        }
+
         /* КОНТАКТЫ */
         .contact-row {
             display: flex;
@@ -722,7 +838,7 @@
         <p class="tagline-hand typing-text" id="typingText"></p>
 
         <div class="btn-group">
-            <a href="#experience" class="btn-sec neon-hover">Смотреть краткое резюме</a>
+            <a href="#" id="presentationBtn" class="btn-sec neon-hover">Презентация</a>
             <a href="Резюме Никитин Федор 04_02_26.pdf" class="btn-sec neon-hover" download>
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/>
@@ -1034,12 +1150,12 @@
                 bubbleInterval = setInterval(createAndAnimate, 120);
                 createAndAnimate();
             });
-                btn.addEventListener('mouseleave', function() {
-                    clearInterval(bubbleInterval);
-                    bubbles.forEach(function(b) { if (b.parentNode) b.parentNode.removeChild(b); });
-                    bubbles = [];
-                });
+            btn.addEventListener('mouseleave', function() {
+                clearInterval(bubbleInterval);
+                bubbles.forEach(function(b) { if (b.parentNode) b.parentNode.removeChild(b); });
+                bubbles = [];
             });
+        });
 
             // --- Автовозобновление только фонового видео `heroVideo` после простоя/смены вкладки ---
             (function() {
@@ -1107,7 +1223,7 @@
 
             // Показ по словам при вхождении в область
             var shown = false;
-            var delay = 110; // задержка между словами в мс
+            var delay = 55; // задержка между словами в мс
 
             var obs = new IntersectionObserver(function(entries) {
                 entries.forEach(function(entry){
@@ -1137,6 +1253,213 @@
             obs.observe(typingText);
         })();
 
+        // --- Презентация: затемнение страницы и показ видео по центру экрана ---
+        (function(){
+            var btn = document.getElementById('presentationBtn');
+            if (!btn) return;
+
+            var videoSrc = encodeURI('Фёдор_Никитин__20_лет.mp4');
+            var backdrop = null;
+            var modal = null;
+            var card = null;
+            var video = null;
+            var controls = null;
+            var playBtn = null;
+            var muteBtn = null;
+            var closeBtn = null;
+            var isOpen = false;
+
+            function ensureUI() {
+                if (backdrop && modal && video) return;
+
+                backdrop = document.createElement('div');
+                backdrop.className = 'presentation-backdrop';
+                document.body.appendChild(backdrop);
+
+                modal = document.createElement('div');
+                modal.className = 'presentation-modal';
+                modal.innerHTML = '' +
+                    '<div class="presentation-card">' +
+                        '<video playsinline></video>' +
+                        '<div class="presentation-controls">' +
+                            '<input class="presentation-progress" type="range" min="0" max="100" value="0" step="0.1" aria-label="Progress" />' +
+                            '<button type="button" data-action="togglePlay" aria-label="Play / Pause">' +
+                                '<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>' +
+                            '</button>' +
+                            '<button type="button" data-action="toggleMute" aria-label="Mute / Unmute">' +
+                                '<svg viewBox="0 0 24 24"><path d="M11 5L6 9H2v6h4l5 4V5z"/><path d="M23 9l-6 6"/><path d="M17 9l6 6"/></svg>' +
+                            '</button>' +
+                            '<button type="button" data-action="close" aria-label="Close">' +
+                                '<svg viewBox="0 0 24 24"><path d="M18 6L6 18"/><path d="M6 6l12 12"/></svg>' +
+                            '</button>' +
+                        '</div>' +
+                    '</div>';
+                document.body.appendChild(modal);
+
+                card = modal.querySelector('.presentation-card');
+                video = modal.querySelector('video');
+                controls = modal.querySelector('.presentation-controls');
+                var progress = modal.querySelector('.presentation-progress');
+                playBtn = modal.querySelector('[data-action="togglePlay"]');
+                muteBtn = modal.querySelector('[data-action="toggleMute"]');
+                closeBtn = modal.querySelector('[data-action="close"]');
+
+                backdrop.addEventListener('click', function(){ closePresentation(); });
+                modal.addEventListener('click', function(e){
+                    if (e.target === modal) closePresentation();
+                });
+                card.addEventListener('click', function(e){ e.stopPropagation(); });
+
+                video.addEventListener('click', function(e){
+                    e.stopPropagation();
+                    controls.classList.toggle('open');
+                });
+
+                if (progress) {
+                    progress.addEventListener('click', function(e){ e.stopPropagation(); });
+                    progress.addEventListener('input', function(e){
+                        e.stopPropagation();
+                        if (!isFinite(video.duration) || video.duration <= 0) return;
+                        var pct = parseFloat(progress.value) / 100;
+                        video.currentTime = pct * video.duration;
+                    });
+                }
+
+                playBtn.addEventListener('click', function(e){
+                    e.stopPropagation();
+                    if (video.paused) video.play(); else video.pause();
+                    syncButtons();
+                });
+
+                muteBtn.addEventListener('click', function(e){
+                    e.stopPropagation();
+                    video.muted = !video.muted;
+                    syncButtons();
+                });
+
+                closeBtn.addEventListener('click', function(e){
+                    e.stopPropagation();
+                    closePresentation();
+                });
+
+                video.addEventListener('play', syncButtons);
+                video.addEventListener('pause', syncButtons);
+                video.addEventListener('volumechange', syncButtons);
+                video.addEventListener('ended', function(){
+                    closePresentation();
+                });
+
+                function syncProgress() {
+                    if (!progress) return;
+                    if (!isFinite(video.duration) || video.duration <= 0) {
+                        progress.value = 0;
+                        return;
+                    }
+                    progress.value = (video.currentTime / video.duration) * 100;
+                }
+
+                video.addEventListener('loadedmetadata', syncProgress);
+                video.addEventListener('durationchange', syncProgress);
+                video.addEventListener('timeupdate', syncProgress);
+            }
+
+            function syncButtons() {
+                if (!video || !playBtn || !muteBtn) return;
+                var playSvg = playBtn.querySelector('svg');
+                var muteSvg = muteBtn.querySelector('svg');
+                if (playSvg) {
+                    playSvg.innerHTML = video.paused
+                        ? '<path d="M8 5v14l11-7z"/>'
+                        : '<path d="M6 5h4v14H6z"/><path d="M14 5h4v14h-4z"/>';
+                }
+                if (muteSvg) {
+                    muteSvg.innerHTML = video.muted
+                        ? '<path d="M11 5L6 9H2v6h4l5 4V5z"/><path d="M23 9l-6 6"/><path d="M17 9l6 6"/>'
+                        : '<path d="M11 5L6 9H2v6h4l5 4V5z"/><path d="M15.5 8.5a4 4 0 0 1 0 7"/><path d="M18 6a7 7 0 0 1 0 12"/>';
+                }
+            }
+
+            function openPresentation() {
+                if (isOpen) return;
+                isOpen = true;
+
+                ensureUI();
+                // гарантируем плавную анимацию затемнения
+                backdrop.classList.remove('open');
+                backdrop.offsetHeight;
+                requestAnimationFrame(function(){
+                    backdrop.classList.add('open');
+                });
+
+                video.src = videoSrc;
+                video.currentTime = 0;
+                // Стартуем воспроизведение в рамках клика, но бесшумно,
+                // чтобы браузер не заблокировал autoplay.
+                video.muted = true;
+                video.volume = 0;
+                var p = video.play();
+                if (p && p.catch) p.catch(function(){});
+
+                // Окно с видео показываем только после завершения затемнения
+                setTimeout(function(){
+                    if (!isOpen) return;
+                    modal.classList.add('open');
+                    if (controls) controls.classList.add('open');
+                    // В момент полного открытия окна запускаем «с начала» и со звуком
+                    try { video.currentTime = 0; } catch(e) {}
+                    video.muted = false;
+                    video.volume = 1;
+                    if (video.paused) {
+                        var p2 = video.play();
+                        if (p2 && p2.catch) p2.catch(function(){});
+                    }
+                }, 3000);
+                syncButtons();
+            }
+
+            function closePresentation() {
+                if (!isOpen) return;
+                isOpen = false;
+
+                if (!video) return;
+
+                video.pause();
+                video.removeAttribute('src');
+                video.load();
+
+                if (controls) controls.classList.remove('open');
+                if (modal) modal.classList.remove('open');
+
+                if (backdrop) {
+                    backdrop.classList.remove('open');
+                    setTimeout(function(){
+                        if (backdrop && !backdrop.classList.contains('open')) {
+                            if (backdrop.parentNode) backdrop.parentNode.removeChild(backdrop);
+                            backdrop = null;
+                        }
+                        if (modal && !modal.classList.contains('open')) {
+                            if (modal.parentNode) modal.parentNode.removeChild(modal);
+                            modal = null;
+                            card = null;
+                            video = null;
+                            controls = null;
+                            playBtn = null;
+                            muteBtn = null;
+                            closeBtn = null;
+                        }
+                    }, 3000);
+                }
+            }
+
+            btn.addEventListener('click', function(e){
+                e.preventDefault();
+                openPresentation();
+            });
+
+            document.addEventListener('keydown', function(e){
+                if (e.key === 'Escape') closePresentation();
+            });
+        })();
     });
 </script>
 
