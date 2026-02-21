@@ -116,6 +116,35 @@
             gap: 15px;
         }
 
+        .lang-switch {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px;
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(10px);
+        }
+
+        .lang-switch button {
+            appearance: none;
+            border: 1px solid rgba(255, 255, 255, 0.22);
+            background: transparent;
+            color: var(--text);
+            padding: 6px 10px;
+            border-radius: 999px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            transition: background 160ms ease, border-color 160ms ease;
+        }
+
+        .lang-switch button.active {
+            background: rgba(255, 204, 51, 0.16);
+            border-color: rgba(255, 204, 51, 0.55);
+        }
+
         .nav a {
             border: 1px solid var(--gray);
             color: var(--text);
@@ -834,6 +863,10 @@
         <a href="#experience" class="neon-hover btn-bubbles"><span class="wave-text">Резюме</span></a>
         <a href="#contacts" class="neon-hover btn-bubbles"><span class="wave-text">Связаться</span></a>
     </nav>
+    <div class="lang-switch" aria-label="Language">
+        <button type="button" id="langRu" data-lang="ru" class="active">RU</button>
+        <button type="button" id="langEn" data-lang="en">EN</button>
+    </div>
 </header>
 
 <div class="container" id="home">
@@ -1067,6 +1100,149 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
+        (function(){
+            var STORAGE_KEY = 'site_lang';
+            var ruBtn = document.getElementById('langRu');
+            var enBtn = document.getElementById('langEn');
+            if (!ruBtn || !enBtn) return;
+
+            var ruToEn = {
+                'Никитин Фёдор — Резюме': 'Fedor Nikitin — Resume',
+                'Открыт к предложениям о работе и сотрудничеству.': 'Open to job offers and collaboration.',
+                'Никитин Фёдор': 'Fedor Nikitin',
+                'Главная': 'Home',
+                'Резюме': 'Resume',
+                'Связаться': 'Contact',
+                'Привет! Я ': 'Hi! I am ',
+                'Фёдор': 'Fedor',
+                'Презентация': 'Presentation',
+                'Получить резюме PDF': 'Download resume (PDF)',
+                'Мой 20-летний опыт работы в платежных системах': 'My 20 years of experience in payment systems',
+                'Май 2013 — Декабрь 2025': 'May 2013 — Dec 2025',
+                'Директор департамента по обслуживанию терминальной сети': 'Director, Terminal Network Operations Department',
+                'Ключевые направления:': 'Key areas:',
+                'Диспетчерский центр: круглосуточный мониторинг, контроль исполнения работ': 'Dispatch center: 24/7 monitoring, execution control',
+                'Экспертная поддержка: помощь специалистов в сложных ремонтах штатным и аутсорсинговым командам по всей РФ': 'Expert support: assistance with complex repairs for in-house and outsourced teams across Russia',
+                'Сервисный центр: ремонт оборудования любой сложности': 'Service center: repair of equipment of any complexity',
+                'Закупки и логистика: тендеры, склад с распределенной логистикой по всей РФ': 'Procurement & logistics: tenders, warehouse with distributed logistics across Russia',
+                'Подготовка и размещение терминалов по всей РФ (включая труднодоступные локации) с выбором оптимального подрядчика': 'Preparation and deployment of terminals across Russia (including hard-to-reach locations) with optimal contractor selection',
+                'Московский Зоопарк — фото проекта:': 'Moscow Zoo — project photos:',
+                '«Штрафстоянки» — фото проекта:': 'Impound lots — project photos:',
+                '«Автодор» — фото проекта:': 'Avtodor — project photos:',
+                'Март 2009 — Май 2013': 'Mar 2009 — May 2013',
+                'Заместитель начальника отдела развития (НИОКР)': 'Deputy Head of Development Department (R&D)',
+                'Проектирование конструктива терминалов': 'Terminal mechanical design',
+                'Разработка систем спецэлектроники': 'Development of specialized electronics systems',
+                'Февраль 2007 — Март 2009': 'Feb 2007 — Mar 2009',
+                'Диспетчер': 'Dispatcher',
+                'Координация техников, мониторинг сети': 'Technician coordination, network monitoring',
+                'Контроль сроков устранения неисправностей': 'Control of incident resolution timelines',
+                'Август 2005 — Февраль 2007': 'Aug 2005 — Feb 2007',
+                'Техник': 'Technician',
+                'Диагностика, ремонт платёжных терминалов': 'Diagnostics and repair of payment terminals',
+                'Установка, обновление ПО': 'Installation and software updates',
+                'Надежность сети': 'Network reliability',
+                'Обеспечивал бесперебойную работу (SLA 98+%) оборудования (до 10 000+ единиц) по всей территории РФ. Силами команды до 100 человек (+Аутсорс).': 'Ensured uninterrupted operation (SLA 98+%) of equipment (10,000+ units) across Russia with a team of up to 100 people (+outsourcing).',
+                'Эффективность': 'Efficiency',
+                'Обеспечивал максимальную доступность сервиса для клиента при минимальных операционных издержках.': 'Ensured maximum service availability for clients at minimal operating cost.',
+                'Сервис «под ключ»': 'Turnkey service',
+                'Сервис полного цикла : от ремонта оборудования до подготовки и доставки терминалов на места размещения.': 'Full-cycle service: from equipment repair to preparation and delivery of terminals to deployment locations.',
+                'Навыки': 'Skills',
+                'Планирование и защита бюджета департамента.': 'Planning and defending the department budget.',
+                'Инициация тендеров, подготовка документации для закупок.': 'Initiating tenders and preparing procurement documentation.',
+                'Снижение затрат на техническое обслуживание.': 'Reducing maintenance costs.',
+                'Проведение переговоров с партнёрами по изменению коммерческих условий сотрудничества.': 'Negotiating with partners to update commercial terms.',
+                'Подготовка и заключение договоров.': 'Preparing and signing contracts.',
+                'Претензионная работа с поставщиками и подрядчиками.': 'Claims and dispute work with suppliers and contractors.',
+                'Подготовка презентаций и отчётов с детальной статистикой по работе департамента.': 'Preparing presentations and reports with detailed department performance metrics.',
+                'Грамотная устная и письменная речь.': 'Strong verbal and written communication.',
+                'Участие в формировании должностных инструкций и положений департамента.': 'Contributing to job descriptions and department policies.',
+                'Давайте обсудим!': "Let's talk!",
+                'Открыт к предложениям о работе и сотрудничеству': 'Open to job offers and collaboration',
+                'Телефон': 'Phone',
+                'Резюме свободно для распространения.': 'This resume is free to share.',
+                'Согласие на обработку ПДн третьим лицам для трудоустройства дано.': 'Consent for personal data processing by third parties for employment purposes is granted.',
+                'Дата: 06.02.2026. Никитин Фёдор.': 'Date: 06 Feb 2026. Fedor Nikitin.'
+            };
+
+            function walkTextNodes(root, fn) {
+                var walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+                    acceptNode: function(node){
+                        if (!node || !node.parentNode) return NodeFilter.FILTER_REJECT;
+                        var tag = node.parentNode.tagName;
+                        if (!tag) return NodeFilter.FILTER_ACCEPT;
+                        tag = tag.toLowerCase();
+                        if (tag === 'script' || tag === 'style' || tag === 'noscript') return NodeFilter.FILTER_REJECT;
+                        return NodeFilter.FILTER_ACCEPT;
+                    }
+                });
+                var n;
+                while ((n = walker.nextNode())) fn(n);
+            }
+
+            function translateString(ruText) {
+                var out = ruText;
+                Object.keys(ruToEn).forEach(function(k){
+                    if (!k) return;
+                    out = out.split(k).join(ruToEn[k]);
+                });
+                return out;
+            }
+
+            function translateAttributes(lang) {
+                var els = document.querySelectorAll('[alt],[aria-label],[title]');
+                els.forEach(function(el){
+                    ['alt','aria-label','title'].forEach(function(attr){
+                        if (!el.hasAttribute(attr)) return;
+                        if (!el.__ruAttrs) el.__ruAttrs = {};
+                        if (el.__ruAttrs[attr] == null) el.__ruAttrs[attr] = el.getAttribute(attr);
+                        if (lang === 'ru') {
+                            el.setAttribute(attr, el.__ruAttrs[attr]);
+                        } else {
+                            el.setAttribute(attr, translateString(el.__ruAttrs[attr]));
+                        }
+                    });
+                });
+            }
+
+            function applyLanguage(lang) {
+                document.documentElement.lang = lang;
+                ruBtn.classList.toggle('active', lang === 'ru');
+                enBtn.classList.toggle('active', lang === 'en');
+                try { localStorage.setItem(STORAGE_KEY, lang); } catch(e) {}
+
+                walkTextNodes(document.body, function(node){
+                    if (node.__ruText == null) node.__ruText = node.nodeValue;
+                    if (lang === 'ru') {
+                        node.nodeValue = node.__ruText;
+                        return;
+                    }
+                    node.nodeValue = translateString(node.__ruText);
+                });
+
+                translateAttributes(lang);
+
+                if (lang === 'en') {
+                    document.title = translateString(ruBtn.__ruTitle || document.title);
+                } else {
+                    document.title = ruBtn.__ruTitle || document.title;
+                }
+
+                document.dispatchEvent(new CustomEvent('langchange', { detail: { lang: lang } }));
+            }
+
+            ruBtn.__ruTitle = document.title;
+
+            ruBtn.addEventListener('click', function(){ applyLanguage('ru'); });
+            enBtn.addEventListener('click', function(){ applyLanguage('en'); });
+
+            var initial = 'ru';
+            try {
+                var saved = localStorage.getItem(STORAGE_KEY);
+                if (saved === 'en' || saved === 'ru') initial = saved;
+            } catch(e) {}
+            applyLanguage(initial);
+        })();
         // --- Intersection Observer для анимации появления при прокрутке ---
         var observer = new IntersectionObserver(function(entries) {
             entries.forEach(function(entry) {
@@ -1207,65 +1383,74 @@
             var typingText = document.getElementById('typingText');
             if (!typingText) return;
 
-            var fullText = "Если вы находитесь на этой странице, значит, мы уже знакомы лично или через общие контакты. Сейчас я в поиске новой работы и готов рассмотреть различные предложения, не ограничиваясь прежней сферой деятельности. Очень буду благодарен за вашу помощь в этом процессе!";
+            var ruFullText = "Если вы находитесь на этой странице, значит, мы уже знакомы лично или через общие контакты. Сейчас я в поиске новой работы и готов рассмотреть различные предложения, не ограничиваясь прежней сферой деятельности. Очень буду благодарен за вашу помощь в этом процессе!";
+            var enFullText = "If you are on this page, it means we already know each other personally or through mutual contacts. I am currently looking for a new job and am open to various opportunities, not limited to my previous field. I would be very grateful for your help in this process!";
 
             // Добавляем стиль для .word через <style>, чтобы не править <head> вручную
             var style = document.createElement('style');
             style.textContent = '\n                .typing-words .word { display: inline; opacity: 0; filter: blur(6px); transform: translateY(6px); transition: filter 360ms ease, opacity 360ms ease, transform 360ms cubic-bezier(.2,.9,.2,1); margin-right: 0; }\n                .typing-words .word.visible { opacity: 1; filter: blur(0); transform: translateY(0); }\n            ';
             document.head.appendChild(style);
 
-            // Разбиваем текст на слова, сохраняя пробелы
-            var tokens = fullText.split(/(\s+)/);
-            typingText.innerHTML = '';
-            var wrapper = document.createElement('span');
-            wrapper.className = 'typing-words';
-            wrapper.lang = 'ru';
-            typingText.appendChild(wrapper);
+            var obs = null;
+            function render(lang) {
+                if (obs) { obs.disconnect(); obs = null; }
 
-            var wordSpans = [];
-            tokens.forEach(function(tok) {
-                if (/^\s+$/.test(tok)) {
-                    // пробельный токен — добавляем обычный пробел
-                    wrapper.appendChild(document.createTextNode(' '));
-                } else {
-                    var span = document.createElement('span');
-                    span.className = 'word';
-                    span.textContent = tok;
-                    wrapper.appendChild(span);
-                    wordSpans.push(span);
-                }
-            });
+                var fullText = (lang === 'en') ? enFullText : ruFullText;
+                var tokens = fullText.split(/(\s+)/);
+                typingText.innerHTML = '';
+                var wrapper = document.createElement('span');
+                wrapper.className = 'typing-words';
+                wrapper.lang = lang;
+                typingText.appendChild(wrapper);
 
-            // Показ по словам при вхождении в область
-            var shown = false;
-            var delay = 55; // задержка между словами в мс
-
-            var obs = new IntersectionObserver(function(entries) {
-                entries.forEach(function(entry){
-                    if (entry.isIntersecting && !shown) {
-                        shown = true;
-                        wordSpans.forEach(function(span, i){
-                            setTimeout(function(){
-                                span.classList.add('visible');
-                            }, i * delay);
-                        });
-
-                        // Триггерим одноразовый прыжок двух кнопок ниже после полного вывода слов
-                        var totalShowTime = wordSpans.length * delay + 420;
-                        setTimeout(function(){
-                            var buttons = document.querySelectorAll('.hero .btn-group a');
-                            buttons.forEach(function(btn){
-                                btn.classList.add('btn-jump');
-                                btn.addEventListener('animationend', function(){ btn.classList.remove('btn-jump'); }, { once: true });
-                            });
-                        }, totalShowTime);
-
-                        obs.unobserve(typingText);
+                var wordSpans = [];
+                tokens.forEach(function(tok) {
+                    if (/^\s+$/.test(tok)) {
+                        wrapper.appendChild(document.createTextNode(' '));
+                    } else {
+                        var span = document.createElement('span');
+                        span.className = 'word';
+                        span.textContent = tok;
+                        wrapper.appendChild(span);
+                        wordSpans.push(span);
                     }
                 });
-            }, { threshold: 0.25 });
 
-            obs.observe(typingText);
+                var shown = false;
+                var delay = 55;
+
+                obs = new IntersectionObserver(function(entries) {
+                    entries.forEach(function(entry){
+                        if (entry.isIntersecting && !shown) {
+                            shown = true;
+                            wordSpans.forEach(function(span, i){
+                                setTimeout(function(){
+                                    span.classList.add('visible');
+                                }, i * delay);
+                            });
+
+                            var totalShowTime = wordSpans.length * delay + 420;
+                            setTimeout(function(){
+                                var buttons = document.querySelectorAll('.hero .btn-group a');
+                                buttons.forEach(function(btn){
+                                    btn.classList.add('btn-jump');
+                                    btn.addEventListener('animationend', function(){ btn.classList.remove('btn-jump'); }, { once: true });
+                                });
+                            }, totalShowTime);
+
+                            obs.unobserve(typingText);
+                        }
+                    });
+                }, { threshold: 0.25 });
+
+                obs.observe(typingText);
+            }
+
+            render(document.documentElement.lang === 'en' ? 'en' : 'ru');
+            document.addEventListener('langchange', function(e){
+                var lang = (e && e.detail && e.detail.lang) ? e.detail.lang : (document.documentElement.lang || 'ru');
+                render(lang === 'en' ? 'en' : 'ru');
+            });
         })();
 
         // --- Презентация: затемнение страницы и показ видео по центру экрана ---
