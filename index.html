@@ -572,15 +572,30 @@
             max-height: 86vh;
             position: relative;
             z-index: 2501;
+            background: #ffffff;
+            border-radius: 14px;
+            padding: 14px;
+            transform: translateY(-120vh);
+            transition: transform 700ms cubic-bezier(.2,.9,.2,1);
+        }
+
+        .presentation-modal.open .presentation-card {
+            transform: translateY(0);
         }
 
         .presentation-card video {
             width: 100%;
             max-height: 86vh;
             border-radius: 14px;
-            box-shadow: 0 0 40px var(--neon);
+            box-shadow: none;
             background: #000;
             display: block;
+            opacity: 0;
+            transition: opacity 300ms ease;
+        }
+
+        .presentation-card.video-on video {
+            opacity: 1;
         }
 
         .presentation-controls {
@@ -1393,26 +1408,32 @@
 
                 video.src = videoSrc;
                 video.currentTime = 0;
-                // Стартуем воспроизведение в рамках клика, но бесшумно,
-                // чтобы браузер не заблокировал autoplay.
+                // Запускаем в рамках клика бесшумно (для гарантии autoplay),
+                // но показываем видео позже.
                 video.muted = true;
                 video.volume = 0;
                 var p = video.play();
                 if (p && p.catch) p.catch(function(){});
+                if (card) card.classList.remove('video-on');
 
                 // Окно с видео показываем только после завершения затемнения
                 setTimeout(function(){
                     if (!isOpen) return;
                     modal.classList.add('open');
                     if (controls) controls.classList.add('open');
-                    // В момент полного открытия окна запускаем «с начала» и со звуком
-                    try { video.currentTime = 0; } catch(e) {}
-                    video.muted = false;
-                    video.volume = 1;
-                    if (video.paused) {
-                        var p2 = video.play();
-                        if (p2 && p2.catch) p2.catch(function(){});
-                    }
+                    // Через 1 секунду после выезда экрана показываем видео и включаем звук
+                    setTimeout(function(){
+                        if (!isOpen) return;
+                        if (card) card.classList.add('video-on');
+                        try { video.currentTime = 0; } catch(e) {}
+                        video.muted = false;
+                        video.volume = 1;
+                        if (video.paused) {
+                            var p2 = video.play();
+                            if (p2 && p2.catch) p2.catch(function(){});
+                        }
+                        syncButtons();
+                    }, 1000);
                 }, 3000);
                 syncButtons();
             }
@@ -1423,16 +1444,26 @@
 
                 if (!video) return;
 
+                // 1) выключаем/прячем видео
                 video.pause();
-                video.removeAttribute('src');
-                video.load();
+                video.muted = true;
+                video.volume = 0;
+                if (card) card.classList.remove('video-on');
 
-                if (controls) controls.classList.remove('open');
-                if (modal) modal.classList.remove('open');
+                // 2) убираем экран наверх
+                setTimeout(function(){
+                    if (controls) controls.classList.remove('open');
+                    if (modal) modal.classList.remove('open');
+                }, 300);
 
-                if (backdrop) {
-                    backdrop.classList.remove('open');
+                // 3) затем убираем затемнение и чистим DOM
+                setTimeout(function(){
+                    if (backdrop) backdrop.classList.remove('open');
                     setTimeout(function(){
+                        if (video) {
+                            video.removeAttribute('src');
+                            video.load();
+                        }
                         if (backdrop && !backdrop.classList.contains('open')) {
                             if (backdrop.parentNode) backdrop.parentNode.removeChild(backdrop);
                             backdrop = null;
@@ -1448,7 +1479,7 @@
                             closeBtn = null;
                         }
                     }, 3000);
-                }
+                }, 1000);
             }
 
             btn.addEventListener('click', function(e){
