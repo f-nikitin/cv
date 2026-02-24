@@ -834,6 +834,7 @@
             font-size: 1.15rem;
             font-weight: 700;
             color: #ffffff;
+            user-select: text;
         }
 
         /* АДАПТИВ */
@@ -1176,11 +1177,11 @@
 
     <div id="contacts" class="animate-on-scroll" style="text-align: center;">
         <h2 style="font-size: 3rem; margin-bottom: 10px;">Давайте обсудим!</h2>
-        <p style="color: var(--gray); font-size: 1.3rem; margin-bottom: 50px;">Открыт к предложениям о работе и сотрудничестве в разных ролях - от стартовой позиции до чего-то большего. Готов вписаться в команду и принести пользу, без претензий на топ</p>
+        <p style="color: #fff; font-size: 1.3rem; margin-bottom: 50px;">Открыт к предложениям о работе и сотрудничестве в разных ролях - от стартовой позиции до чего-то большего. Готов вписаться в команду и принести пользу, без претензий на топ</p>
     </div>
 
     <div class="contact-row animate-on-scroll">
-        <a href="mailto:fonikitin.0204@gmail.com" class="c-card neon-hover btn-bubbles animate-on-scroll">
+        <a href="mailto:fonikitin@bk.ru" class="c-card neon-hover btn-bubbles animate-on-scroll">
             <div class="icon-sq" aria-hidden="true">
                 <svg viewBox="0 0 24 24" aria-hidden="true">
                     <path d="M4 6h16v12H4z"></path>
@@ -1188,7 +1189,7 @@
                 </svg>
             </div>
             <span class="c-card-label wave-text">Email</span>
-            <span class="c-card-value wave-text">fonikitin.0204@gmail.com</span>
+            <span class="c-card-value wave-text">fonikitin@bk.ru</span>
         </a>
         <a href="tel:+79629350854" class="c-card neon-hover btn-bubbles animate-on-scroll">
             <div class="icon-sq">
@@ -1524,6 +1525,64 @@
                 bubbles = [];
             });
         });
+
+        (function(){
+            var mailLink = document.querySelector('.contact-row a[href^="mailto:"]');
+            if (!mailLink) return;
+
+            function getEmail() {
+                var href = mailLink.getAttribute('href') || '';
+                var m = href.match(/^mailto:([^?]+)/i);
+                return m ? decodeURIComponent(m[1]) : '';
+            }
+
+            function showToast(text) {
+                var t = document.createElement('div');
+                t.textContent = text;
+                t.style.position = 'fixed';
+                t.style.left = '50%';
+                t.style.bottom = '18px';
+                t.style.transform = 'translateX(-50%)';
+                t.style.padding = '10px 12px';
+                t.style.borderRadius = '12px';
+                t.style.background = 'rgba(0,0,0,0.78)';
+                t.style.color = '#fff';
+                t.style.fontWeight = '700';
+                t.style.fontSize = '13px';
+                t.style.zIndex = '9999';
+                t.style.maxWidth = 'min(92vw, 420px)';
+                t.style.textAlign = 'center';
+                t.style.boxShadow = '0 8px 24px rgba(0,0,0,0.35)';
+                document.body.appendChild(t);
+                setTimeout(function(){
+                    t.style.transition = 'opacity 220ms ease';
+                    t.style.opacity = '0';
+                    setTimeout(function(){ if (t.parentNode) t.parentNode.removeChild(t); }, 240);
+                }, 1300);
+            }
+
+            mailLink.addEventListener('click', function(e){
+                var email = getEmail();
+                if (!email) return;
+
+                e.preventDefault();
+
+                var copied = false;
+                var p = null;
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                    p = navigator.clipboard.writeText(email).then(function(){ copied = true; }).catch(function(){});
+                }
+
+                Promise.resolve(p).finally(function(){
+                    if (copied) showToast('Email скопирован: ' + email);
+                    else showToast('Email: ' + email);
+
+                    setTimeout(function(){
+                        window.location.href = 'mailto:' + email;
+                    }, 80);
+                });
+            });
+        })();
 
             // --- Автовозобновление только фонового видео `heroVideo` после простоя/смены вкладки ---
             (function() {
