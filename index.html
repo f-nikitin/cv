@@ -1779,5 +1779,47 @@
     });
 </script>
 
+<style>
+    /* Стиль для анимированных цифр за курсором */
+    .digit {
+        position: fixed;
+        top: 0;
+        left: 0;
+        font-size: 16px;
+        font-weight: bold;
+        color: rgba(255, 204, 51, 0.5);
+        pointer-events: none;
+        animation: fadeOut 2s forwards;
+    }
+
+    @keyframes fadeOut {
+        0% {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        100% {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+    }
+</style>
+
+<script>
+    // Анимация цифр за курсором
+    document.addEventListener('mousemove', (e) => {
+        const digit = document.createElement('div');
+        digit.classList.add('digit');
+        digit.textContent = Math.random() > 0.5 ? '1' : '0';
+        digit.style.left = `${e.clientX}px`;
+        digit.style.top = `${e.clientY}px`;
+        document.body.appendChild(digit);
+
+        // Удаление элемента после завершения анимации
+        digit.addEventListener('animationend', () => {
+            digit.remove();
+        });
+    });
+</script>
+
 </body>
 </html>
