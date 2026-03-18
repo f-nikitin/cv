@@ -32,7 +32,6 @@
         }
 
         html { scroll-behavior: smooth; }
-
         body {
             margin: 0;
             font-family: 'Montserrat', sans-serif;
@@ -51,10 +50,18 @@
             height: 100%;
             z-index: -2;
             overflow: hidden;
-            background-image: url('background.jpg');
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
+        }
+
+        .video-bg-container video {
+            min-width: 100%;
+            min-height: 100%;
+            width: auto;
+            height: auto;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            object-fit: cover;
         }
 
         /* Не допускать, чтобы аватар расширял страницу по горизонтали */
@@ -519,28 +526,6 @@
             font-weight: bold;
         }
         
-        .skills-group ul {
-            list-style: none;
-            padding-left: 0;
-            margin: 0;
-        }
-        
-        .skills-group ul li {
-            position: relative;
-            padding-left: 25px;
-            margin-bottom: 12px;
-            color: var(--gray);
-        }
-        
-        .skills-group ul li::before {
-            content: '•';
-            position: absolute;
-            left: 0;
-            color: var(--gold);
-            font-size: 1.2em;
-            font-weight: bold;
-        }
-        
         /* Отступы между параграфами */
         p {
             margin-bottom: 15px;
@@ -894,7 +879,11 @@
 </head>
 <body>
 
-<div class="video-bg-container"></div>
+<div class="video-bg-container">
+    <video autoplay muted loop playsinline>
+        <source src="background.mp4" type="video/mp4">
+    </video>
+</div>
 <div class="video-overlay"></div>
 
 <header>
@@ -940,7 +929,52 @@
         </div>
     </section>
 
-    <h2 id="experience" class="animate-on-scroll" style="text-align: center; margin: 80px 0 50px;">Мой 20-летний опыт работы в платежных системах</h2>
+    <h2 id="experience" class="animate-on-scroll" style="text-align: center; margin: 80px 0 50px;">«Обладаю 20-летним опытом в техническом и операционном сервисе. Моя сильная сторона - способность быстро вникнуть в любое направление деятельности, разобраться в процессах и начать приносить пользу с первых дней работы».</h2>
+
+    <section class="skills animate-on-scroll" id="skills">
+        <h2>Мои личные профессиональные навыки</h2>
+        <div class="job-card neon-hover btn-bubbles animate-on-scroll">
+            <h3>Операционная и коммерческая деятельность:</h3>
+            <div class="job-body">
+                <ul>
+                    <li>Бюджетирование: Планирование и контроль расходов.</li>
+                    <li>Закупки и тендеры: Подготовка документации и инициирование тендерных процедур.</li>
+                    <li>Оптимизация затрат: Снижение расходов на техническое обслуживание и эксплуатацию оборудования.</li>
+                    <li>Управление услугами связи: Контроль инцидентов и оптимизация затрат на связь (работа с биллингом МТС, МегаФон, Билайн, Т2 в рамках ЛК).</li>
+                    <li>Переговорная деятельность: Согласование коммерческих условий с партнерами и подрядчиками.</li>
+                    <li>Договорная работа: Подготовка, заключение договоров и ведение претензионной работы.</li>
+                    <li>Отчетность: Сбор статистики, подготовка презентаций и аналитических отчетов.</li>
+                    <li>Документооборот: Разработка должностных инструкций, регламентов и внутренних положений.</li>
+                    <li>Учет имущества: Проведение инвентаризаций и контроль сложного учета ТМЦ.</li>
+                </ul>
+            </div>
+        </div>
+        <div class="job-card neon-hover btn-bubbles animate-on-scroll">
+            <h3>Технические компетенции:</h3>
+            <div class="job-body">
+                <ul>
+                    <li>Экспертиза в оборудовании: Понимание логики работы ПО и аппаратной части ПК, вендингового оборудования и периферии.</li>
+                    <li>Офисное ПО: Владение пакетом MS Office (хорошее знание Excel).</li>
+                    <li>Адаптивность к ПО: Быстрое освоение новых АРМ и специализированных программных интерфейсов.</li>
+                    <li>Работа с ИИ: Базовые навыки использования нейросетей (промпты, агенты, генерация графики и видео, создание сайтов).</li>
+                </ul>
+            </div>
+        </div>
+        <hr style="border: 1px solid var(--gray); margin: 40px 0;">
+        <div class="job-card neon-hover btn-bubbles animate-on-scroll">
+            <h3>Личные качества</h3>
+            <div class="job-body">
+                <ul>
+                    <li>Коммуникация: Высокий уровень грамотности (устной и письменной), умение вести деловую переписку.</li>
+                    <li>Ответственность: Дисциплинированный подход к выполнению задач и соблюдению сроков.</li>
+                    <li>Решение задач: Навык поиска нестандартных решений в сложных или критических ситуациях.</li>
+                    <li>Образ жизни: Отсутствие вредных привычек, высокая работоспособность.</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <h2 id="experience" class="animate-on-scroll" style="text-align: center; margin: 80px 0 50px;">ОПЫТ РАБОТЫ</h2>
     <div class="timeline animate-on-scroll">
         <div class="job-card neon-hover btn-bubbles animate-on-scroll">
             <div class="job-icon">💼</div>
@@ -1061,28 +1095,6 @@
         </div>
     </div>
 
-    <section class="skills animate-on-scroll" id="skills">
-        <h2>Навыки</h2>
-        <div class="timeline">
-            <div class="job-card neon-hover btn-bubbles animate-on-scroll">
-                <div class="job-icon">⭐</div>
-                <div class="job-body">
-                    <ul style="color: var(--gray); padding-left: 20px;">
-                        <li>Планирование и защита бюджета департамента.</li>
-                        <li>Инициация тендеров, подготовка документации для закупок.</li>
-                        <li>Снижение затрат на техническое обслуживание.</li>
-                        <li>Проведение переговоров с партнёрами по изменению коммерческих условий сотрудничества.</li>
-                        <li>Подготовка и заключение договоров.</li>
-                        <li>Претензионная работа с поставщиками и подрядчиками.</li>
-                        <li>Подготовка презентаций и отчётов с детальной статистикой по работе департамента.</li>
-                        <li>Грамотная устная и письменная речь.</li>
-                        <li>Участие в формировании должностных инструкций и положений департамента.</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </section>
-
     <div id="contacts" class="animate-on-scroll" style="text-align: center;">
         <h2 style="font-size: 3rem; margin-bottom: 10px;">Давайте обсудим!</h2>
         <p style="color: #fff; font-size: 1.3rem; margin-bottom: 50px;">Открыт к предложениям о работе и сотрудничестве в разных ролях - от стартовой позиции до чего-то большего. Готов вписаться в команду и принести пользу, без претензий на топ</p>
@@ -1160,7 +1172,7 @@
                 'Фёдор': 'Fedor',
                 'Презентация': 'Presentation',
                 'Получить резюме PDF': 'Download resume (PDF)',
-                'Мой 20-летний опыт работы в платежных системах': 'My 20 years of experience in payment systems',
+                '«Обладаю 20-летним опытом в техническом и операционном сервисе. Моя сильная сторона - способность быстро вникнуть в любое направление деятельности, разобраться в процессах и начать приносить пользу с первых дней работы».': 'I have 20 years of experience in technical and operational service. My strong point is the ability to quickly delve into any field of activity, understand the processes and start bringing benefits from the first days of work.',
                 'Май 2013 — Декабрь 2025': 'May 2013 — Dec 2025',
                 'Директор департамента по обслуживанию терминальной сети': 'Director, Terminal Network Operations Department',
                 'Ключевые направления:': 'Key areas:',
@@ -1190,16 +1202,29 @@
                 'Обеспечивал максимальную доступность сервиса для клиента при минимальных операционных издержках.': 'Ensured maximum service availability for clients at minimal operating cost.',
                 'Сервис «под ключ»': 'Turnkey service',
                 'Сервис полного цикла : от ремонта оборудования до подготовки и доставки терминалов на места размещения.': 'Full-cycle service: from equipment repair to preparation and delivery of terminals to deployment locations.',
+                'ОПЫТ РАБОТЫ': 'WORK EXPERIENCE',
                 'Навыки': 'Skills',
-                'Планирование и защита бюджета департамента.': 'Planning and defending the department budget.',
-                'Инициация тендеров, подготовка документации для закупок.': 'Initiating tenders and preparing procurement documentation.',
-                'Снижение затрат на техническое обслуживание.': 'Reducing maintenance costs.',
-                'Проведение переговоров с партнёрами по изменению коммерческих условий сотрудничества.': 'Negotiating with partners to update commercial terms.',
-                'Подготовка и заключение договоров.': 'Preparing and signing contracts.',
-                'Претензионная работа с поставщиками и подрядчиками.': 'Claims and dispute work with suppliers and contractors.',
-                'Подготовка презентаций и отчётов с детальной статистикой по работе департамента.': 'Preparing presentations and reports with detailed department performance metrics.',
-                'Грамотная устная и письменная речь.': 'Strong verbal and written communication.',
-                'Участие в формировании должностных инструкций и положений департамента.': 'Contributing to job descriptions and department policies.',
+                'Мои личные профессиональные навыки': 'My personal professional skills',
+                'Операционная и коммерческая деятельность:': 'Operational and commercial activities:',
+                'Бюджетирование: Планирование и контроль расходов.': 'Budgeting: Planning and expense control.',
+                'Закупки и тендеры: Подготовка документации и инициирование тендерных процедур.': 'Procurement and tenders: Documentation preparation and tender initiation.',
+                'Оптимизация затрат: Снижение расходов на техническое обслуживание и эксплуатацию оборудования.': 'Cost optimization: Reducing maintenance and equipment operation costs.',
+                'Управление услугами связи: Контроль инцидентов и оптимизация затрат на связь (работа с биллингом МТС, МегаФон, Билайн, Т2 в рамках ЛК).': 'Communication services management: Incident control and communication cost optimization (working with MTS, MegaFon, Beeline, T2 billing in personal accounts).',
+                'Переговорная деятельность: Согласование коммерческих условий с партнерами и подрядчиками.': 'Negotiation activities: Agreeing commercial terms with partners and contractors.',
+                'Договорная работа: Подготовка, заключение договоров и ведение претензионной работы.': 'Contract work: Preparation, conclusion of contracts and claims management.',
+                'Отчетность: Сбор статистики, подготовка презентаций и аналитических отчетов.': 'Reporting: Collecting statistics, preparing presentations and analytical reports.',
+                'Документооборот: Разработка должностных инструкций, регламентов и внутренних положений.': 'Document flow: Developing job descriptions, regulations and internal policies.',
+                'Учет имущества: Проведение инвентаризаций и контроль сложного учета ТМЦ.': 'Asset accounting: Conducting inventories and complex inventory control.',
+                'Технические компетенции:': 'Technical competencies:',
+                'Экспертиза в оборудовании: Понимание логики работы ПО и аппаратной части ПК, вендингового оборудования и периферии.': 'Equipment expertise: Understanding the logic of software and hardware of PCs, vending equipment and peripherals.',
+                'Офисное ПО: Владение пакетом MS Office (хорошее знание Excel).': 'Office software: Proficiency in MS Office suite (good Excel knowledge).',
+                'Адаптивность к ПО: Быстрое освоение новых АРМ и специализированных программных интерфейсов.': 'Software adaptability: Quick mastering of new workstations and specialized software interfaces.',
+                'Работа с ИИ: Базовые навыки использования нейросетей (промпты, агенты, генерация графики и видео, создание сайтов).': 'Working with AI: Basic skills in using neural networks (prompts, agents, graphics and video generation, website creation).',
+                'Личные качества': 'Personal qualities',
+                'Коммуникация: Высокий уровень грамотности (устной и письменной), умение вести деловую переписку.': 'Communication: High level of literacy (oral and written), ability to conduct business correspondence.',
+                'Ответственность: Дисциплинированный подход к выполнению задач и соблюдению сроков.': 'Responsibility: Disciplined approach to task completion and deadline adherence.',
+                'Решение задач: Навык поиска нестандартных решений в сложных или критических ситуациях.': 'Problem solving: Skill in finding non-standard solutions in complex or critical situations.',
+                'Образ жизни: Отсутствие вредных привычек, высокая работоспособность.': 'Lifestyle: No bad habits, high performance.',
                 'Давайте обсудим!': "Let's talk!",
                 'Открыт к предложениям о работе и сотрудничестве в разных ролях - от стартовой позиции до чего-то большего. Готов вписаться в команду и принести пользу, без претензий на топ': 'Open to job offers and collaboration',
                 'Телефон': 'Phone',
