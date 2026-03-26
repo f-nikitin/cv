@@ -64,11 +64,6 @@
             left: 50%;
             transform: translate(-50%, -50%);
             object-fit: cover;
-            opacity: 0;
-            transition: opacity 220ms ease;
-        }
-
-        .video-bg-container video.ready {
             opacity: 1;
         }
 
@@ -1487,12 +1482,6 @@
                 if (!bg || bg.tagName !== 'VIDEO') return;
                 bg.preload = 'auto';
                 bg.load();
-
-                function markVideoReady() {
-                    bg.classList.add('ready');
-                }
-                bg.addEventListener('loadeddata', markVideoReady, { once: true });
-                bg.addEventListener('canplay', markVideoReady, { once: true });
 
                 var tailAttr = parseFloat(bg.getAttribute('data-tail-seconds'));
                 var LOOP_TAIL_SECONDS = isFinite(tailAttr) && tailAttr > 0 ? tailAttr : 5;
