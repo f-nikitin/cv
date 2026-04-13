@@ -65,6 +65,15 @@
             overflow: hidden;
             background: #03211a;
         }
+        .video-bg-poster {
+            position: absolute;
+            inset: 0;
+            background-size: cover;
+            background-position: center;
+            transition: opacity 0.8s ease;
+            z-index: 1;
+        }
+        .video-bg-poster.hidden { opacity: 0; pointer-events: none; }
         .video-bg-container video {
             min-width: 100%; min-height: 100%;
             width: auto; height: auto;
@@ -72,6 +81,7 @@
             top: 50%; left: 50%;
             transform: translate(-50%, -50%);
             object-fit: cover;
+            z-index: 0;
         }
         .video-overlay {
             position: fixed;
@@ -437,38 +447,30 @@
         /* МЕТАЛЛ-ПАНЕЛИ */
         .expert-card, .job-card, .skills-group, .c-card {
             overflow: hidden;
-            background:
-                linear-gradient(135deg, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0.07) 18%, rgba(0,0,0,0.08) 62%, rgba(255,255,255,0.05) 100%),
-                linear-gradient(180deg, #6b7f90 0%, #516678 42%, #3a4f60 100%);
-            border: 1px solid rgba(255,255,255,0.18);
-            box-shadow:
-                inset 0 1px 0 rgba(255,255,255,0.22),
-                inset 0 -14px 28px rgba(0,0,0,0.26),
-                0 10px 22px rgba(0,0,0,0.40);
+            background: linear-gradient(135deg, rgba(255,255,255,0.12) 0%, rgba(0,0,0,0.06) 50%, rgba(255,255,255,0.04) 100%);
+            border: 1px solid rgba(255,255,255,0.14);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.30);
             color: #fff;
             position: relative;
+            will-change: box-shadow, border-color;
         }
         .expert-card::after, .job-card::after, .skills-group::after, .c-card::after {
             content: '';
             position: absolute; inset: 0;
             border-radius: inherit;
-            background: url('metal-texture.png') center/cover no-repeat, linear-gradient(135deg, rgba(255,255,255,0.20) 0%, rgba(255,255,255,0.08) 18%, rgba(0,0,0,0.10) 62%, rgba(255,255,255,0.06) 100%);
-            opacity: 0.22;
+            background: linear-gradient(135deg, rgba(255,255,255,0.14) 0%, rgba(0,0,0,0.08) 50%, rgba(255,255,255,0.04) 100%);
+            opacity: 0.2;
             mix-blend-mode: overlay;
             pointer-events: none;
         }
         .expert-card > *, .job-card > *, .skills-group > *, .c-card > * { position: relative; z-index: 1; }
 
         .expert-card, .job-card, .skills-group, .c-card {
-            transition: all 0.3s ease;
+            transition: box-shadow 0.3s ease, border-color 0.3s ease;
         }
         .expert-card:hover, .job-card:hover, .skills-group:hover, .c-card:hover {
-            box-shadow:
-                0 0 35px rgba(255,204,51,0.5),
-                inset 0 1px 0 rgba(255,255,255,0.22),
-                inset 0 -12px 26px rgba(0,0,0,0.24),
-                0 14px 30px rgba(0,0,0,0.46);
-            border-color: rgba(255,204,51,0.55);
+            box-shadow: 0 0 30px rgba(255,204,51,0.4), 0 8px 20px rgba(0,0,0,0.35);
+            border-color: rgba(255,204,51,0.5);
             transform: none !important;
         }
 
@@ -797,8 +799,8 @@
         /* АНИМАЦИЯ ПОЯВЛЕНИЯ */
         .animate-on-scroll {
             opacity: 0;
-            transform: translateY(40px);
-            transition: opacity 1.4s ease, transform 1.4s ease;
+            transform: translateY(24px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
             will-change: opacity, transform;
         }
         .animate-on-scroll.visible {
@@ -981,7 +983,9 @@
             .skills h2 { font-size: 1.3rem; margin-bottom: 25px; }
             .skill-card { padding: 20px 16px 16px; cursor: pointer; }
             .skill-card .skill-tags { display: none; }
-            .skill-card.expanded .skill-tags { display: flex; }
+            .skill-card.expanded .skill-tags { display: flex; flex-wrap: wrap; justify-content: flex-start; }
+            .skill-card h3 { text-align: left; }
+            .skill-card-icon { margin-left: 0; }
             .job-card { padding: 22px 22px 18px 70px; margin-bottom: 16px; cursor: pointer; }
             .job-card .job-body { display: none; }
             .job-card.expanded .job-body { display: block; }
@@ -1016,6 +1020,121 @@
             .avatar { width: 130px; height: 130px; }
             h1 { font-size: 1.3rem; }
         }
+
+        /* ============================
+           ГОРИЗОНТАЛЬНЫЙ ТАЙМЛАЙН
+           ============================ */
+        .htl-wrap {
+            margin: 0 -18px 48px;
+            width: calc(100% + 36px);
+            padding: 0 24px;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+            box-sizing: border-box;
+        }
+        .htl-wrap::-webkit-scrollbar { display: none; }
+
+        .htl-track {
+            display: flex;
+            align-items: flex-start;
+            width: 100%;
+            padding: 8px 4px 4px;
+        }
+
+        /* Один шаг */
+        .htl-step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            flex: 1;
+            min-width: 0;
+        }
+
+        /* Строка с точкой и линией */
+        .htl-row {
+            display: flex;
+            align-items: center;
+            width: 100%;
+        }
+
+        .htl-dot {
+            width: 12px; height: 12px;
+            border-radius: 50%;
+            border: 2px solid rgba(255,255,255,0.3);
+            background: rgba(255,255,255,0.1);
+            flex-shrink: 0;
+            position: relative;
+            z-index: 2;
+            transition: all 0.3s;
+        }
+        .htl-step.htl-active .htl-dot {
+            width: 16px; height: 16px;
+            background: var(--gold);
+            border-color: var(--gold);
+            box-shadow: 0 0 0 4px rgba(255,204,51,0.15), 0 0 14px rgba(255,204,51,0.45);
+        }
+
+        .htl-line {
+            flex: 1;
+            height: 2px;
+            min-width: 0;
+            background: linear-gradient(to right, rgba(255,204,51,0.5), rgba(255,255,255,0.1));
+        }
+        .htl-step:last-child .htl-line { display: block; }
+        .htl-line-end {
+            background: linear-gradient(to right, rgba(255,204,51,0.35), rgba(255,255,255,0.03)) !important;
+        }
+
+        /* Текст под точкой */
+        .htl-label {
+            margin-top: 10px;
+            text-align: center;
+            padding: 0 8px;
+        }
+        .htl-years {
+            display: block;
+            font-size: 0.65rem;
+            font-weight: 700;
+            color: rgba(255,255,255,0.35);
+            letter-spacing: 0.3px;
+            margin-bottom: 3px;
+        }
+        .htl-step.htl-active .htl-years { color: var(--gold); }
+
+        .htl-role {
+            display: block;
+            font-size: 0.65rem;
+            color: rgba(255,255,255,0.4);
+            white-space: normal;
+            word-break: break-word;
+            margin-top: 2px;
+        }
+        .htl-role-bold {
+            font-weight: 700;
+            color: rgba(255,255,255,0.85);
+            font-size: 0.78rem;
+        }
+        .htl-step.htl-active .htl-role-bold { color: #fff; }
+
+        .htl-company {
+            display: block;
+            font-size: 0.65rem;
+            font-weight: 400;
+            color: rgba(255,255,255,0.45);
+            white-space: normal;
+            word-break: break-word;
+            margin-top: 2px;
+        }
+        .htl-step.htl-active .htl-company { color: rgba(255,255,255,0.6); }
+
+        @media (max-width: 768px) {
+            .htl-wrap { margin: 0 -10px 48px; width: calc(100% + 20px); padding: 0 14px; }
+            .htl-line { min-width: 0; }
+            .htl-company { font-size: 0.72rem; }
+        }
+
     </style>
 
     <!-- Yandex.Metrika counter -->
@@ -1034,6 +1153,7 @@
 <body>
 
 <div class="video-bg-container">
+    <div class="video-bg-poster" id="videoBgPoster"></div>
     <video id="heroVideo" autoplay muted playsinline preload="auto" data-tail-seconds="3.5">
         <source src="background.mp4" type="video/mp4">
     </video>
@@ -1194,7 +1314,62 @@
     </section>
 
     <!-- ОПЫТ РАБОТЫ -->
-    <h2 id="experience" class="animate-on-scroll" style="text-align: center; margin: 80px 0 30px;">ОПЫТ РАБОТЫ</h2>
+    <h2 id="experience" class="animate-on-scroll" style="text-align: center; margin: 80px 0 24px;">ОПЫТ РАБОТЫ</h2>
+
+    <div class="htl-wrap animate-on-scroll">
+        <div class="htl-track">
+
+            <div class="htl-step htl-active" style="flex:12">
+                <div class="htl-row">
+                    <div class="htl-dot"></div>
+                    <div class="htl-line"></div>
+                </div>
+                <div class="htl-label">
+                    <span class="htl-years">2013 — 2025</span>
+                    <span class="htl-role htl-role-bold">Директор по обслуживанию</span>
+                    <span class="htl-company">ГК «Элекснет»</span>
+                </div>
+            </div>
+
+            <div class="htl-step" style="flex:4">
+                <div class="htl-row">
+                    <div class="htl-dot"></div>
+                    <div class="htl-line"></div>
+                </div>
+                <div class="htl-label">
+                    <span class="htl-years">2009 — 2013</span>
+                    <span class="htl-role htl-role-bold">Зам. нач. отдела развития</span>
+                    <span class="htl-company">ЦЕНТР-СЕРВИС</span>
+                </div>
+            </div>
+
+            <div class="htl-step" style="flex:2">
+                <div class="htl-row">
+                    <div class="htl-dot"></div>
+                    <div class="htl-line"></div>
+                </div>
+                <div class="htl-label">
+                    <span class="htl-years">2007 — 2009</span>
+                    <span class="htl-role htl-role-bold">Диспетчер</span>
+                    <span class="htl-company">Элекснет Сервис</span>
+                </div>
+            </div>
+
+            <div class="htl-step" style="flex:2">
+                <div class="htl-row">
+                    <div class="htl-dot"></div>
+                    <div class="htl-line htl-line-end"></div>
+                </div>
+                <div class="htl-label">
+                    <span class="htl-years">2005 — 2007</span>
+                    <span class="htl-role htl-role-bold">Техник</span>
+                    <span class="htl-company">Элекснет Сервис</span>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
     <div class="timeline animate-on-scroll">
 
         <div class="job-card neon-hover btn-bubbles animate-on-scroll">
@@ -1330,12 +1505,12 @@
     </div>
 
     <div class="contact-row animate-on-scroll">
-        <a href="mailto:fonikitin@bk.ru" class="c-card neon-hover animate-on-scroll">
+        <a href="/cdn-cgi/l/email-protection#d6b0b9b8bfbdbfa2bfb896b4bdf8a4a3" class="c-card neon-hover animate-on-scroll">
             <div class="icon-sq" aria-hidden="true">
                 <svg viewBox="0 0 24 24"><path d="M4 6h16v12H4z"></path><path d="M4 7l8 6 8-6"></path></svg>
             </div>
             <span class="c-card-label wave-text">Email</span>
-            <span class="c-card-value wave-text">fonikitin@bk.ru</span>
+            <span class="c-card-value wave-text"><span class="__cf_email__" data-cfemail="8aece5e4e3e1e3fee3e4cae8e1a4f8ff">[email&#160;protected]</span></span>
         </a>
         <a href="tel:+79629350854" class="c-card neon-hover animate-on-scroll">
             <div class="icon-sq">
@@ -1374,7 +1549,7 @@
     <p><strong>Резюме свободно для распространения.</strong> Согласие на обработку ПДн третьим лицам для трудоустройства дано.</p>
 </footer>
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
     document.addEventListener('DOMContentLoaded', function () {
 
         // --- Языковой переключатель ---
@@ -1632,12 +1807,34 @@
             });
         })();
 
-        // --- Фоновое видео: полный проход, затем цикл последних секунд ---
+        // --- Фоновое видео: первый кадр как постер + полный проход, затем цикл ---
         (function(){
             var bg = document.getElementById('heroVideo');
+            var poster = document.getElementById('videoBgPoster');
             if (!bg || bg.tagName !== 'VIDEO') return;
             bg.preload = 'auto';
             bg.load();
+
+            var posterCaptured = false;
+            function captureFirstFrame(){
+                if (posterCaptured || !poster) return;
+                try {
+                    var c = document.createElement('canvas');
+                    c.width = bg.videoWidth || 1920;
+                    c.height = bg.videoHeight || 1080;
+                    c.getContext('2d').drawImage(bg, 0, 0, c.width, c.height);
+                    poster.style.backgroundImage = 'url(' + c.toDataURL('image/jpeg', 0.85) + ')';
+                    posterCaptured = true;
+                } catch(e){}
+            }
+            bg.addEventListener('loadeddata', function(){ captureFirstFrame(); });
+            bg.addEventListener('seeked', function(){ captureFirstFrame(); });
+
+            function hidePoster(){
+                if (poster && posterCaptured) poster.classList.add('hidden');
+            }
+            bg.addEventListener('playing', hidePoster, {once: true});
+
             var tailAttr = parseFloat(bg.getAttribute('data-tail-seconds'));
             var LOOP_TAIL_SECONDS = isFinite(tailAttr) && tailAttr > 0 ? tailAttr : 5;
             var tailLoopActive = false, tailStart = 0, seekGuard = false;
@@ -1834,12 +2031,4 @@
         const digit = document.createElement('div');
         digit.classList.add('digit');
         digit.textContent = Math.random() > 0.5 ? '1' : '0';
-        digit.style.left = `${e.clientX}px`;
-        digit.style.top = `${e.clientY}px`;
-        document.body.appendChild(digit);
-        digit.addEventListener('animationend', () => { digit.remove(); });
-    });
-</script>
-
-</body>
-</html>
+     
