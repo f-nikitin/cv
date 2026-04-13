@@ -1172,6 +1172,10 @@
     <!-- /Yandex.Metrika counter -->
 </head>
 <body>
+<style>#preloader-cover{position:fixed;inset:0;z-index:9999;background:#03211a;display:flex;align-items:center;justify-content:center;transition:opacity .5s ease}#preloader-cover.done{opacity:0;pointer-events:none}.site-content{opacity:0;transition:opacity .5s ease}.site-content.visible{opacity:1}</style>
+<div id="preloader-cover"></div>
+<script>(function(){var img=new Image();img.src='back.jpg';function show(){var p=document.getElementById('preloader-cover');var s=document.querySelector('.site-content');if(p)p.classList.add('done');if(s)s.classList.add('visible');setTimeout(function(){if(p&&p.parentNode)p.parentNode.removeChild(p)},600);}img.onload=show;img.onerror=show;setTimeout(show,2500);})();
+</script>
 
 <div class="video-bg-container">
     <div class="video-bg-poster" id="videoBgPoster" style="background-image:url('back.jpg');background-size:cover;background-position:center;"></div>
@@ -1181,6 +1185,7 @@
 </div>
 <div class="video-overlay"></div>
 
+<div class="site-content">
 <header>
     <div style="font-weight: 700;">Никитин Фёдор</div>
     <nav class="nav">
@@ -1562,8 +1567,8 @@
             </div>
             <span class="c-card-value wave-text">LinkedIn</span>
         </a>
-    </div>
-</div>
+         </div>
+</div></div>
 
 <footer style="text-align: center; padding: 60px 0; color: var(--gray); border-top: 1px solid rgba(255,255,255,0.08); position: relative; z-index: 1; font-size: 0.9rem;">
     © 2026 Никитин Фёдор. Компетенции открыты для инвестиций в крутые проекты
