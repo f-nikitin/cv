@@ -1701,55 +1701,140 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-    // ── Фоновое видео: tail-loop + постер ───────────────────
+    // ── Фоновое видео: мобильный crossfade / десктопный loop ─
     (function () {
-        var bg = document.getElementById('heroVideo');
-        if (!bg) return;
+        var vidA = document.getElementById('heroVideo');
+        if (!vidA) return;
 
-        // Tail-loop: после первого полного прохода зацикливаем последние N секунд
-        var LOOP_TAIL = parseFloat(bg.dataset.tailSeconds) || 5;
-        var tailStart = 0, tailActive = false, seekGuard = false;
+        var isMob = window.innerWidth <= 768;
 
-        bg.addEventListener('loadedmetadata', function () {
-            tailStart = Math.max(0, bg.duration - LOOP_TAIL);
-        });
+        if (isMob) {
+            var LOOP_TAIL = parseFloat(vidA.dataset.tailSeconds) || 5;
+            var FADE_SEC = 1.2;
 
-        bg.addEventListener('ended', function () {
-            if (!tailActive) {
-                tailActive = true;
-                tailStart = Math.max(0, bg.duration - LOOP_TAIL);
+            var vidB = vidA.cloneNode(true);
+            vidB.removeAttribute('id');
+            vidB.style.cssText = 'position:absolute;top:50%;left:50%;min-width:100%;min-height:100%;width:auto;height:auto;transform:translate(-50%,-50%);object-fit:cover;z-index:0;opacity:0;transition:opacity ' + FADE_SEC + 's ease;';
+            vidA.parentNode.insertBefore(vidB, vidA);
+            vidA.style.transition = 'opacity ' + FADE_SEC + 's ease';
+
+            var tailStart = 0;
+            var crossfading = false;
+            var currentVid = vidA;
+            var nextVid = vidB;
+
+            function calcTail(v) { return Math.max(0, v.duration - LOOP_TAIL); }
+
+            vidA.addEventListener('loadedmetadata', function () { tailStart = calcTail(vidA); });
+            vidB.addEventListener('loadedmetadata', function () { if (!tailStart) tailStart = calcTail(vidB); });
+
+            function doCrossfade() {
+                if (crossfading) return;
+                crossfading = true;
+
+                nextVid.currentTime = tailStart;
+                var p = nextVid.play(); if (p && p.catch) p.catch(function () {});
+
+                currentVid.style.opacity = '0';
+                nextVid.style.opacity = '1';
+
+                setTimeout(function () {
+                    var tmp = currentVid;
+                    currentVid = nextVid;
+                    nextVid = tmp;
+
+                    nextVid.pause();
+                    nextVid.currentTime = tailStart;
+
+                    crossfading = false;
+                    monitorCurrent();
+                }, FADE_SEC * 1000 + 50);
             }
-            seekGuard = true;
-            bg.currentTime = tailStart;
-            var p = bg.play(); if (p && p.catch) p.catch(function () {});
-            setTimeout(function () { seekGuard = false; }, 120);
-        });
 
-        bg.addEventListener('timeupdate', function () {
-            if (!tailActive || seekGuard || !isFinite(bg.duration)) return;
-            if (bg.currentTime >= bg.duration - 0.06) {
+            var tHandler = null;
+            function monitorCurrent() {
+                if (tHandler) currentVid.removeEventListener('timeupdate', tHandler);
+                tHandler = function () {
+                    if (crossfading || !isFinite(currentVid.duration)) return;
+                    if (currentVid.currentTime >= currentVid.duration - 0.15) {
+                        currentVid.removeEventListener('timeupdate', tHandler);
+                        tHandler = null;
+                        doCrossfade();
+                    }
+                };
+                currentVid.addEventListener('timeupdate', tHandler);
+
+                currentVid.addEventListener('ended', function onEnd() {
+                    currentVid.removeEventListener('ended', onEnd);
+                    if (tHandler) { currentVid.removeEventListener('timeupdate', tHandler); tHandler = null; }
+                    doCrossfade();
+                }, { once: true });
+            }
+
+            vidA.addEventListener('ended', function onFirstEnd() {
+                vidA.removeEventListener('ended', onFirstEnd);
+                if (!tailStart) tailStart = calcTail(vidA);
+                doCrossfade();
+            });
+
+            function tryPlay() {
+                if (!currentVid.paused && !currentVid.ended) return;
+                if (currentVid.ended) currentVid.currentTime = tailStart;
+                var p = currentVid.play(); if (p && p.catch) p.catch(function () {});
+            }
+            document.addEventListener('visibilitychange', function () { if (!document.hidden) tryPlay(); });
+            window.addEventListener('focus', tryPlay);
+            ['pointerdown', 'touchstart', 'click', 'keydown'].forEach(function (ev) {
+                window.addEventListener(ev, tryPlay, { passive: true, once: true });
+            });
+            var retryInterval = setInterval(function () {
+                if (!currentVid.paused) { clearInterval(retryInterval); return; }
+                tryPlay();
+            }, 3000);
+        } else {
+            var LOOP_TAIL = parseFloat(vidA.dataset.tailSeconds) || 5;
+            var tailStart = 0, tailActive = false, seekGuard = false;
+
+            vidA.addEventListener('loadedmetadata', function () {
+                tailStart = Math.max(0, vidA.duration - LOOP_TAIL);
+            });
+
+            vidA.addEventListener('ended', function () {
+                if (!tailActive) {
+                    tailActive = true;
+                    tailStart = Math.max(0, vidA.duration - LOOP_TAIL);
+                }
                 seekGuard = true;
-                bg.currentTime = tailStart;
-                var p = bg.play(); if (p && p.catch) p.catch(function () {});
-                setTimeout(function () { seekGuard = false; }, 90);
-            }
-        });
+                vidA.currentTime = tailStart;
+                var p = vidA.play(); if (p && p.catch) p.catch(function () {});
+                setTimeout(function () { seekGuard = false; }, 120);
+            });
 
-        // Восстановление воспроизведения при возврате на вкладку
-        function tryPlay() {
-            if (!bg.paused && !bg.ended) return;
-            if (bg.ended && tailActive) bg.currentTime = tailStart;
-            var p = bg.play(); if (p && p.catch) p.catch(function () {});
+            vidA.addEventListener('timeupdate', function () {
+                if (!tailActive || seekGuard || !isFinite(vidA.duration)) return;
+                if (vidA.currentTime >= vidA.duration - 0.06) {
+                    seekGuard = true;
+                    vidA.currentTime = tailStart;
+                    var p = vidA.play(); if (p && p.catch) p.catch(function () {});
+                    setTimeout(function () { seekGuard = false; }, 90);
+                }
+            });
+
+            function tryPlay() {
+                if (!vidA.paused && !vidA.ended) return;
+                if (vidA.ended && tailActive) vidA.currentTime = tailStart;
+                var p = vidA.play(); if (p && p.catch) p.catch(function () {});
+            }
+            document.addEventListener('visibilitychange', function () { if (!document.hidden) tryPlay(); });
+            window.addEventListener('focus', tryPlay);
+            ['pointerdown', 'click', 'keydown'].forEach(function (ev) {
+                window.addEventListener(ev, tryPlay, { passive: true, once: true });
+            });
+            var retryInterval = setInterval(function () {
+                if (!vidA.paused) { clearInterval(retryInterval); return; }
+                tryPlay();
+            }, 3000);
         }
-        document.addEventListener('visibilitychange', function () { if (!document.hidden) tryPlay(); });
-        window.addEventListener('focus', tryPlay);
-        ['pointerdown', 'touchstart', 'click', 'keydown'].forEach(function (ev) {
-            window.addEventListener(ev, tryPlay, { passive: true, once: true });
-        });
-        var retryInterval = setInterval(function () {
-            if (!bg.paused) { clearInterval(retryInterval); return; }
-            tryPlay();
-        }, 3000);
     })();
 
     // ── Типизация текста по словам ───────────────────────────
