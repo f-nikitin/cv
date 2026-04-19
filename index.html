@@ -1541,6 +1541,29 @@ document.addEventListener('DOMContentLoaded', function () {
             'Резюме свободно для распространения.': 'This resume is free to share.',
             'Согласие на обработку ПДн третьим лицам для трудоустройства дано.': 'Consent for personal data processing by third parties for employment is granted.',
             '© 2026 Никитин Фёдор. Компетенции открыты для инвестиций в крутые проекты': '© 2026 Fedor Nikitin. Skills available for investment in great projects.',
+            'Директор департамента обслуживания терминальной сети': 'Head of Terminal Network Service Department',
+            'Написать в Telegram': 'Message on Telegram',
+            '«Через двадцать лет вы будете больше сожалеть о том, чего не сделали, чем о том, что сделали.»': '"In twenty years you will be more disappointed by the things you didn\'t do than by the ones you did do."',
+            '- Марк Твен': '- Mark Twain',
+            '20 лет я не сидел в зоне комфорта: брался за сложное, чинил, нанимал, запускал. Твен прав — есть вещи, о которых жалеешь. Так что следующие 20 лет буду стараться делать всё, чтобы не осталось места сожалениям.': 'For 20 years I stepped out of my comfort zone: took on challenges, fixed things, hired people, launched projects. Twain is right — there are things you regret. So for the next 20 years I will do everything to leave no room for regret.',
+            'Директор по обслуживанию': 'Director of Service',
+            'Зам. нач. отдела развития': 'Deputy Head of Development',
+            'Начальник отдела': 'Department Head',
+            'Офис / удалёнка': 'Office / remote',
+            'Загрузка': 'Loading',
+            'Навигация': 'Navigation',
+            'Аватар — воспроизвести видео': 'Avatar — play video',
+            'Московский зоопарк — проект ': 'Moscow Zoo — project ',
+            'Проект «Штрафстоянки» — ': 'Impound lots project — ',
+            'Проект «Автодор» — ': 'Avtodor project — ',
+            'Фото — Никитин Фёдор': 'Photo — Fedor Nikitin',
+            'Сейчас я в поиске новой работы и готов рассмотреть различные предложения': 'I am currently looking for a new job and open to various opportunities',
+            'Закупки и логистика: тендеры, склад с распределённой логистикой по всей РФ': 'Procurement & logistics: tenders, distributed warehouse logistics across Russia',
+            'ИИ: создание сайтов и ПО': 'AI: website & software creation',
+            'Прогресс': 'Progress',
+            'Пауза / Воспроизведение': 'Pause / Play',
+            'Звук': 'Sound',
+            'Закрыть': 'Close',
         };
 
         function walkTextNodes(root, fn) {
@@ -1590,6 +1613,12 @@ document.addEventListener('DOMContentLoaded', function () {
             });
 
             translateAttributes(lang);
+
+            document.querySelectorAll('meta[property],meta[name]').forEach(function (el) {
+                if (!el.hasAttribute('content')) return;
+                if (!el.__ruContent) el.__ruContent = el.getAttribute('content');
+                el.setAttribute('content', lang === 'ru' ? el.__ruContent : translateString(el.__ruContent));
+            });
 
             document.title = lang === 'en'
                 ? translateString(ruBtn.__ruTitle || document.title)
