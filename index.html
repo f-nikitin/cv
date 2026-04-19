@@ -1026,6 +1026,16 @@
         var vid = document.getElementById('heroVideo');
         if (!vid) { reveal(); return; }
 
+        // Выбираем источник в зависимости от устройства
+        var source = vid.querySelector('source');
+        if (source) {
+            var isMob = window.innerWidth <= 768;
+            var src = isMob ? (source.getAttribute('data-src-mob') || source.getAttribute('data-src'))
+                            : source.getAttribute('data-src');
+            source.src = src;
+            vid.load();
+        }
+
         if (vid.readyState >= 3) {
             clearTimeout(fallbackTimer);
             reveal();
@@ -1070,7 +1080,7 @@
         data-tail-seconds="3.5"
         aria-hidden="true"
     >
-        <source src="background.mp4" type="video/mp4">
+        <source data-src="background.mp4" data-src-mob="Mob_video.mp4" type="video/mp4">
     </video>
 </div>
 <div class="video-overlay" aria-hidden="true"></div>
@@ -1583,8 +1593,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
         function translateString(ruText) {
             var out = ruText;
-            Object.keys(ruToEn).forEach(function (k) {
-                if (!k) return;
+            var keys = Object.keys(ruToEn).filter(Boolean).sort(function (a, b) { return b.length - a.length; });
+            keys.forEach(function (k) {
                 out = out.split(k).join(ruToEn[k]);
             });
             return out;
