@@ -143,6 +143,9 @@
             z-index: -2;
             overflow: hidden;
             background: var(--bg);
+            will-change: transform;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
         }
         /* Статичный постер — виден пока видео не готово */
         .video-bg-container video {
@@ -150,7 +153,7 @@
             top: 50%; left: 50%;
             min-width: 100%; min-height: 100%;
             width: auto; height: auto;
-            transform: translate(-50%, -50%);
+            transform: translate3d(-50%, -50%, 0);
             object-fit: cover;
             z-index: 0;
         }
@@ -898,7 +901,9 @@
         }
         @media (max-width: 768px) {
             .htl-wrap { display: none; }
+            html { scroll-behavior: auto; }
             body { font-size: 14px; line-height: 1.5; }
+            .video-bg-container video { opacity: 0.7; }
             header { padding: 8px 10px; font-size: 12px; }
             .container { padding: 0 10px; }
             .hero { padding: 100px 8px 25px; }
@@ -1713,7 +1718,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             var vidB = vidA.cloneNode(true);
             vidB.removeAttribute('id');
-            vidB.style.cssText = 'position:absolute;top:50%;left:50%;min-width:100%;min-height:100%;width:auto;height:auto;transform:translate(-50%,-50%);object-fit:cover;z-index:0;opacity:0;transition:opacity ' + FADE_SEC + 's ease;';
+            vidB.style.cssText = 'position:absolute;top:50%;left:50%;min-width:100%;min-height:100%;width:auto;height:auto;transform:translate3d(-50%,-50%,0);object-fit:cover;z-index:0;opacity:0;transition:opacity ' + FADE_SEC + 's ease;';
             vidA.parentNode.insertBefore(vidB, vidA);
             vidA.style.transition = 'opacity ' + FADE_SEC + 's ease';
 
