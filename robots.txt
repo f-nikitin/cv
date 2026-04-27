@@ -1,0 +1,11 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://f-nikitin.github.io/cv/sitemap.xml
+
+User-agent: Yandex
+Allow: /
+Crawl-delay: 1
+
+User-agent: Googlebot
+Allow: /
