@@ -238,6 +238,97 @@
             transition: all .25s ease;
         }
         .header-cta:hover { border-color: rgba(255,204,51,.45); box-shadow: 0 0 18px rgba(255,204,51,.18); }
+
+        /* Mobile menu (drawer) */
+        .mnav-btn {
+            display: none;
+            width: 42px;
+            height: 42px;
+            border-radius: 14px;
+            border: 1px solid rgba(255,255,255,.16);
+            background: rgba(255,255,255,.06);
+            color: var(--text-primary);
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+        .mnav-btn svg { width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+        .mnav-backdrop {
+            position: fixed;
+            inset: 0;
+            z-index: 2200;
+            background: rgba(0,0,0,.56);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity .22s ease;
+        }
+        .mnav-backdrop.open { opacity: 1; pointer-events: auto; }
+        .mnav-drawer {
+            position: fixed;
+            left: 10px;
+            right: 10px;
+            top: 10px;
+            z-index: 2201;
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,.12);
+            background: rgba(10,20,15,.92);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            transform: translateY(-16px);
+            opacity: 0;
+            pointer-events: none;
+            transition: transform .22s ease, opacity .22s ease;
+        }
+        .mnav-drawer.open { transform: translateY(0); opacity: 1; pointer-events: auto; }
+        .mnav-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 12px 10px;
+            border-bottom: 1px solid rgba(255,255,255,.08);
+        }
+        .mnav-title { font-weight: 800; letter-spacing: .2px; }
+        .mnav-close {
+            width: 42px;
+            height: 42px;
+            border-radius: 14px;
+            border: 1px solid rgba(255,255,255,.16);
+            background: rgba(255,255,255,.06);
+            color: var(--text-primary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .mnav-close svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+        .mnav-body { padding: 12px; display: grid; gap: 10px; }
+        .mnav-link {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 12px 14px;
+            border-radius: 16px;
+            border: 1px solid rgba(255,255,255,.12);
+            background: rgba(255,255,255,.05);
+            color: var(--text-primary);
+            text-decoration: none;
+            font-weight: 800;
+        }
+        .mnav-link span { color: rgba(255,255,255,.65); font-weight: 700; font-size: 12px; }
+        .mnav-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .mnav-mini {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 11px 12px;
+            border-radius: 16px;
+            border: 1px solid rgba(255,255,255,.12);
+            background: rgba(255,255,255,.05);
+            color: var(--text-primary);
+            text-decoration: none;
+            font-weight: 800;
+        }
         .nav {
             display: flex;
             align-items: center;
@@ -1095,6 +1186,8 @@
             .header-cta { display: none; }
             .lang-switch { padding: 4px; }
             .lang-switch button { padding: 6px 10px; font-size: 12px; }
+            .mnav-btn { display: inline-flex; }
+            .header-actions { gap: 8px; }
 
             .container { padding: 0 12px; }
             .hero { padding: 82px 0 10px; }
@@ -1113,6 +1206,13 @@
             h1 { font-size: 1.55rem; line-height: 1.25; margin-bottom: 10px; letter-spacing: -.3px; }
             .hero-role { font-size: .8rem; padding: 7px 12px; border-radius: 999px; }
             .hero-metrics { gap: 16px; }
+            .hero-metric {
+                background: rgba(255,255,255,.06);
+                border: 1px solid rgba(255,255,255,.12);
+                border-radius: 14px;
+                padding: 10px 10px 8px;
+                min-width: 128px;
+            }
             .hero-metric-num { font-size: 1.5rem; }
             .hero-metric-label { font-size: .65rem; }
             .hero-metric-sep { display: none; }
@@ -1174,6 +1274,22 @@
             /* Пузырьки и “wave” на мобиле — лишняя нагрузка */
             .bubble { display: none !important; }
             .btn-bubbles:hover .wave-text { animation: none !important; }
+
+            /* Accordion affordance */
+            .job-card, .skill-card, .expert-card { position: relative; }
+            .job-card::before,
+            .skill-card::before,
+            .expert-card::before {
+                content: 'Нажмите, чтобы раскрыть';
+                position: absolute;
+                right: 14px;
+                top: 14px;
+                font-size: 11px;
+                color: rgba(255,255,255,.35);
+            }
+            .job-card.expanded::before,
+            .skill-card.expanded::before,
+            .expert-card.expanded::before { content: 'Свернуть'; }
         }
         @media (max-width: 480px) {
             body { font-size: 13px; }
@@ -1345,6 +1461,9 @@
         <a href="#contacts"   class="neon-hover btn-bubbles"><span class="wave-text">Связаться</span></a>
     </nav>
     <div class="header-actions">
+        <button class="mnav-btn" id="mobileMenuBtn" type="button" aria-label="Меню" aria-expanded="false">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16"/><path d="M4 12h16"/><path d="M4 17h16"/></svg>
+        </button>
         <a class="header-cta" href="#contacts" aria-label="К контактам">Связаться</a>
         <div class="lang-switch" aria-label="Language">
             <button type="button" id="langRu" data-lang="ru" class="active">RU</button>
@@ -1352,6 +1471,27 @@
         </div>
     </div>
 </header>
+
+<!-- Mobile drawer -->
+<div class="mnav-backdrop" id="mnavBackdrop" aria-hidden="true"></div>
+<div class="mnav-drawer" id="mnavDrawer" role="dialog" aria-modal="true" aria-label="Меню">
+    <div class="mnav-head">
+        <div class="mnav-title">Навигация</div>
+        <button class="mnav-close" id="mnavClose" type="button" aria-label="Закрыть меню">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6L6 18"/><path d="M6 6l12 12"/></svg>
+        </button>
+    </div>
+    <div class="mnav-body">
+        <a class="mnav-link" href="#home"><strong>Главная</strong><span>hero, метрики</span></a>
+        <a class="mnav-link" href="#highlights"><strong>Компетенции</strong><span>ключевые блоки</span></a>
+        <a class="mnav-link" href="#experience"><strong>Опыт</strong><span>должности, проекты</span></a>
+        <a class="mnav-link" href="#contacts"><strong>Связаться</strong><span>email, телефон, мессенджеры</span></a>
+        <div class="mnav-row">
+            <a class="mnav-mini" href="Резюме%20Никитин%20Федор%2004_02_26.pdf" download>Скачать PDF</a>
+            <a class="mnav-mini" href="#" id="mnavPresentationBtn">Презентация</a>
+        </div>
+    </div>
+</div>
 
 <div class="container" id="home">
 
@@ -1991,11 +2131,52 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // ── Мобильные: раскрыть карточки сразу ─────────────────
-    if (window.innerWidth <= 768) {
-        document.querySelectorAll('.expert-card, .job-card, .skill-card').forEach(function (c) {
-            c.classList.add('expanded');
-        });
-    }
+    (function () {
+        if (window.innerWidth > 768) return;
+
+        function bindAccordion(cardSel, bodySel) {
+            var cards = Array.prototype.slice.call(document.querySelectorAll(cardSel));
+            if (!cards.length) return;
+
+            cards.forEach(function (card) {
+                var body = card.querySelector(bodySel);
+                if (!body) return;
+                card.setAttribute('role', 'button');
+                card.setAttribute('tabindex', '0');
+                card.setAttribute('aria-expanded', card.classList.contains('expanded') ? 'true' : 'false');
+
+                function toggle(open) {
+                    var next = (open == null) ? !card.classList.contains('expanded') : !!open;
+                    // закрываем остальные того же типа
+                    cards.forEach(function (c) {
+                        if (c !== card) {
+                            c.classList.remove('expanded');
+                            c.setAttribute('aria-expanded', 'false');
+                        }
+                    });
+                    card.classList.toggle('expanded', next);
+                    card.setAttribute('aria-expanded', next ? 'true' : 'false');
+                }
+
+                function shouldIgnore(e) {
+                    var t = e.target;
+                    return !!(t && (t.closest('a') || t.closest('button') || t.closest('input') || t.closest('select') || t.closest('textarea')));
+                }
+
+                card.addEventListener('click', function (e) {
+                    if (shouldIgnore(e)) return;
+                    toggle();
+                });
+                card.addEventListener('keydown', function (e) {
+                    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(); }
+                });
+            });
+        }
+
+        bindAccordion('.job-card',   '.job-body');
+        bindAccordion('.skill-card', '.skill-tags');
+        bindAccordion('.expert-card','.expert-body');
+    })();
 
     // ── Пузырьки ─────────────────────────────────────────────
     document.querySelectorAll('a.btn-bubbles, button.btn-bubbles').forEach(function (btn) {
@@ -2214,6 +2395,7 @@ document.addEventListener('DOMContentLoaded', function () {
         var btn = document.getElementById('presentationBtn');
         if (!btn) return;
         var stickyBtn = document.getElementById('stickyPresentationBtn');
+        var mnavBtn = document.getElementById('mnavPresentationBtn');
         var videoSrc = encodeURI('Фёдор_Никитин__20_лет.mp4');
         var backdrop = null, modal = null, card = null, video = null, controls = null;
         var playBtn = null, muteBtn = null, closeBtn = null, isOpen = false;
@@ -2335,7 +2517,38 @@ document.addEventListener('DOMContentLoaded', function () {
 
         btn.addEventListener('click', function (e) { e.preventDefault(); openPresentation(); });
         if (stickyBtn) stickyBtn.addEventListener('click', function (e) { e.preventDefault(); openPresentation(); });
+        if (mnavBtn) mnavBtn.addEventListener('click', function (e) { e.preventDefault(); openPresentation(); });
         document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closePresentation(); });
+    })();
+
+    // ── Mobile drawer menu ──────────────────────────────────
+    (function () {
+        var btn = document.getElementById('mobileMenuBtn');
+        var backdrop = document.getElementById('mnavBackdrop');
+        var drawer = document.getElementById('mnavDrawer');
+        var closeBtn = document.getElementById('mnavClose');
+        if (!btn || !backdrop || !drawer || !closeBtn) return;
+
+        var open = false;
+        function setOpen(v) {
+            open = !!v;
+            btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+            backdrop.classList.toggle('open', open);
+            drawer.classList.toggle('open', open);
+            backdrop.setAttribute('aria-hidden', open ? 'false' : 'true');
+            if (open) closeBtn.focus();
+        }
+
+        btn.addEventListener('click', function () { setOpen(!open); });
+        closeBtn.addEventListener('click', function () { setOpen(false); });
+        backdrop.addEventListener('click', function () { setOpen(false); });
+        drawer.querySelectorAll('a[href^="#"]').forEach(function (a) {
+            a.addEventListener('click', function () { setOpen(false); });
+        });
+        document.addEventListener('keydown', function (e) {
+            if (!open) return;
+            if (e.key === 'Escape') setOpen(false);
+        });
     })();
 
     // ── Полноэкранный просмотр галереи ───────────────────────
