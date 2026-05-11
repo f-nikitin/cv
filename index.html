@@ -2382,21 +2382,38 @@ document.addEventListener('DOMContentLoaded', function () {
 }); // end DOMContentLoaded
 
 
-// ── Курсорные цифры (mousemove) ───────────────────────────
-if (window.matchMedia('(pointer:fine)').matches && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-document.addEventListener('mousemove', function (e) {
-    var digit = document.createElement('div');
-    digit.className = 'digit';
-    digit.textContent = Math.random() > 0.5 ? '1' : '0';
-    digit.style.left = e.clientX + 'px';
-    digit.style.top  = e.clientY + 'px';
-    document.body.appendChild(digit);
-    digit.addEventListener('animationend', function () {
-        if (digit.parentNode) digit.parentNode.removeChild(digit);
-    }, { once: true });
-}, { passive: true });
-}
-</script>
+// ── �������� ц��� ─ 0 ─ N ──────────
+(function() {
+    function animateCounter(el) {
+        if (el.dataset.animDone) return;
+        el.dataset.animDone = '1';
+        var raw = el.textContent;
+        var target = parseInt(raw.replace(/[^0-9]/g, ''), 10);
+        if (!target || isNaN(target)) return;
+        var suffix = raw.replace(/[0-9]/g, '');
+        var duration = Math.min(1800, target * 30 + 400);
+        var startTime = null;
+        function step(ts) {
+            if (!startTime) startTime = ts;
+            var p = Math.min((ts - startTime) / duration, 1);
+            var eased = 1 - Math.pow(1 - p, 3);
+            el.textContent = Math.floor(eased * target) + suffix;
+            if (p < 1) requestAnimationFrame(step);
+        }
+        requestAnimationFrame(step);
+    }
+    function init() {
+        var els = document.querySelectorAll('.hero-metric-num, .expert-card .metric-big');
+        if (!els.length) return;
+        var obs = new IntersectionObserver(function(entries) {
+            entries.forEach(function(e) { if (e.isIntersecting) animateCounter(e.target); });
+        }, { threshold: 0.2 });
+        els.forEach(function(el) { obs.observe(el); });
+    }
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+    } else { init(); }
+})();</script>
 
 </body>
 </html>
