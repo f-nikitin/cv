@@ -1248,10 +1248,10 @@
                     radial-gradient(1000px 700px at 50% -10%, rgba(0,0,0,.20), rgba(3,33,26,.88) 55%),
                     linear-gradient(180deg, rgba(3,33,26,.62) 0%, rgba(3,33,26,.94) 100%);
             }
-            .expert-card, .job-card, .skills-group, .c-card, .skill-card { background: rgba(3,33,26,.55) !important; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
-            .case-accordion { background: rgba(3,33,26,.55) !important; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
-            .manifesto-blockquote { background: rgba(3,33,26,.5) !important; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
-            .looking-for { background: rgba(3,33,26,.5) !important; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
+            .expert-card, .job-card, .skills-group, .c-card, .skill-card { background: rgba(3,33,26,.75) !important; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,.08) !important; }
+            .case-accordion { background: rgba(3,33,26,.75) !important; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+            .manifesto-blockquote { background: rgba(3,33,26,.72) !important; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+            .looking-for { background: rgba(3,33,26,.72) !important; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
             .skill-tag { background: rgba(255,255,255,.13) !important; }
             .looking-tag { background: rgba(255,255,255,.09) !important; }
             .hero-role { background: rgba(3,33,26,.6) !important; }
@@ -1266,7 +1266,7 @@
             .mobile-lang button:hover { border-color: var(--primary); box-shadow: 0 0 10px rgba(0,209,255,.2); }
 
             .container { padding: 0 12px; }
-            .hero { padding: 82px 0 10px; }
+            .hero { padding: 6px 0 10px; }
             .sticky-contact { display: block; }
             .avatar { width: 124px; height: 124px; margin-bottom: 14px; box-shadow: 0 0 0 6px rgba(255,204,51,.10), 0 0 44px rgba(255,204,51,.22); }
             .hero-under {
@@ -1428,6 +1428,7 @@
     function reveal() {
         if (done) return;
         done = true;
+        window.scrollTo(0, 0);
         var p = document.getElementById('preloader');
         var s = document.querySelector('.site-content');
         if (p) p.classList.add('done');
