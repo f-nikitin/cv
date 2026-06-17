@@ -1242,22 +1242,24 @@
                             var(--bg);
             }
             .site-content { position: relative; overflow: visible; }
-            .video-bg-container video { opacity: 0.42; filter: saturate(1.08) contrast(1.05); will-change: transform, opacity; -webkit-backface-visibility: hidden; backface-visibility: hidden; }
+            .video-bg-container video { opacity: 1; filter: none; will-change: transform; -webkit-backface-visibility: hidden; backface-visibility: hidden; }
             .video-overlay {
                 background:
-                    radial-gradient(1000px 700px at 50% -10%, rgba(0,0,0,.20), rgba(3,33,26,.88) 55%),
-                    linear-gradient(180deg, rgba(3,33,26,.62) 0%, rgba(3,33,26,.94) 100%);
+                    radial-gradient(1000px 700px at 50% -10%, rgba(0,0,0,.10), rgba(3,33,26,.55) 55%),
+                    linear-gradient(180deg, rgba(3,33,26,.30) 0%, rgba(3,33,26,.65) 100%);
             }
             .expert-card, .job-card, .skills-group, .c-card, .skill-card,
             .case-accordion, .manifesto-blockquote, .looking-for,
-            .contacts-section, .hero-under, .hero-role {
-                background: rgba(3,33,26,.7) !important;
-                backdrop-filter: blur(12px) !important;
-                -webkit-backdrop-filter: blur(12px) !important;
-                border: 1px solid rgba(255,255,255,.08) !important;
+            .contacts-section, .hero-under, .hero-role,
+            .contact-row {
+                background: rgba(255,255,255,.08) !important;
+                backdrop-filter: blur(16px) !important;
+                -webkit-backdrop-filter: blur(16px) !important;
+                border: 1px solid rgba(255,255,255,.12) !important;
+                box-shadow: 0 8px 32px rgba(0,0,0,.25) !important;
             }
             header { display: none; }
-            .mobile-lang { display: flex; justify-content: center; gap: 6px; padding: 12px 0 6px; }
+            .mobile-lang { position: absolute; top: 10px; right: 10px; display: flex; gap: 5px; z-index: 10; }
             .mobile-lang button {
                 padding: 6px 14px; border-radius: 999px; border: 1px solid rgba(255,255,255,.18);
                 background: rgba(255,255,255,.06); color: var(--text); font-size: 12px; font-weight: 700;
@@ -1267,17 +1269,13 @@
             .mobile-lang button:hover { border-color: var(--primary); box-shadow: 0 0 10px rgba(0,209,255,.2); }
 
             .container { padding: 0 12px; }
-            .hero { padding: 6px 0 10px; }
+            .hero { padding: 6px 0 10px; position: relative; }
             .sticky-contact { display: block; }
             .avatar { width: 124px; height: 124px; margin-bottom: 14px; box-shadow: 0 0 0 6px rgba(255,204,51,.10), 0 0 44px rgba(255,204,51,.22); }
             .hero-under {
                 padding: 16px 14px;
                 border-radius: 18px;
                 margin-top: 10px;
-                background: rgba(10,20,15,.62) !important;
-                border: 1px solid rgba(255,255,255,.10) !important;
-                backdrop-filter: blur(14px);
-                -webkit-backdrop-filter: blur(14px);
             }
             .nav { display: none; }
             h1 { font-size: 1.55rem; line-height: 1.25; margin-bottom: 10px; letter-spacing: -.3px; }
