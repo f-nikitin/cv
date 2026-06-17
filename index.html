@@ -252,6 +252,7 @@
             align-items: center;
             gap: 15px;
         }
+        .mobile-lang { display: none; }
         .lang-switch {
             display: inline-flex;
             align-items: center;
@@ -1247,24 +1248,22 @@
                     radial-gradient(1000px 700px at 50% -10%, rgba(0,0,0,.20), rgba(3,33,26,.88) 55%),
                     linear-gradient(180deg, rgba(3,33,26,.62) 0%, rgba(3,33,26,.94) 100%);
             }
-            .expert-card, .job-card, .skills-group, .c-card, .skill-card { background: rgba(3,33,26,.7) !important; }
-            .case-accordion { background: rgba(3,33,26,.7) !important; }
-            .manifesto-blockquote { background: rgba(3,33,26,.65) !important; }
-            .looking-for { background: rgba(3,33,26,.65) !important; }
+            .expert-card, .job-card, .skills-group, .c-card, .skill-card { background: rgba(3,33,26,.55) !important; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
+            .case-accordion { background: rgba(3,33,26,.55) !important; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
+            .manifesto-blockquote { background: rgba(3,33,26,.5) !important; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
+            .looking-for { background: rgba(3,33,26,.5) !important; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
             .skill-tag { background: rgba(255,255,255,.13) !important; }
             .looking-tag { background: rgba(255,255,255,.09) !important; }
             .hero-role { background: rgba(3,33,26,.6) !important; }
-            header {
-                padding: 10px 12px;
-                font-size: 12px;
-                background: rgba(255,255,255,.1);
-                border-bottom: 1px solid rgba(255,255,255,.14);
-                box-shadow: 0 4px 20px rgba(0,0,0,.2);
+            header { display: none; }
+            .mobile-lang { display: flex; justify-content: center; gap: 6px; padding: 12px 0 6px; }
+            .mobile-lang button {
+                padding: 6px 14px; border-radius: 999px; border: 1px solid rgba(255,255,255,.18);
+                background: rgba(255,255,255,.06); color: var(--text); font-size: 12px; font-weight: 700;
+                cursor: pointer; transition: all .25s ease;
             }
-            .brand-name { font-size: 13px; font-weight: 800; }
-            .header-cta { display: none; }
-            .lang-switch { padding: 4px; }
-            .lang-switch button { padding: 6px 10px; font-size: 12px; }
+            .mobile-lang button.active { background: rgba(255,204,51,.16); border-color: rgba(255,204,51,.55); }
+            .mobile-lang button:hover { border-color: var(--primary); box-shadow: 0 0 10px rgba(0,209,255,.2); }
 
             .container { padding: 0 12px; }
             .hero { padding: 82px 0 10px; }
@@ -1336,6 +1335,8 @@
             footer { padding-bottom: 120px !important; }
 
             /* Мобильная “современность”: меньше неона/ховеров, больше читабельности */
+            .sticky-contact__btn { font-size: .7rem; gap: 4px; min-height: 38px; }
+            .sticky-contact__btn svg { width: 14px; height: 14px; }
             .neon-hover:hover,
             .expert-card:hover,
             .job-card:hover,
@@ -1529,6 +1530,10 @@
 
     <!-- HERO -->
     <section class="hero animate-on-scroll">
+        <div class="mobile-lang" aria-label="Language">
+            <button type="button" id="langRuMob" data-lang="ru" class="active">RU</button>
+            <button type="button" id="langEnMob" data-lang="en">EN</button>
+        </div>
         <div class="avatar" role="button" tabindex="0" aria-label="Аватар — воспроизвести видео">
             <video
                 id="avatarVideo"
@@ -2043,9 +2048,11 @@
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.5 4.5L9 4l2 4-2 1.5a10 10 0 0 0 5.5 5.5L16 13l4 2-.5 2.5c-.2 1-1 1.8-2 2-2.3.4-6.2-.8-9.1-3.7S3.6 8.8 4 6.5c.2-1 .9-1.8 2.5-2z"></path></svg>
             Позвонить
         </a>
-        <a class="sticky-contact__btn" href="https://t.me/Fedorclick" target="_blank" rel="noopener noreferrer" aria-label="Написать в Telegram">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 4L11 14"></path><path d="M21 4l-7 18-3-7-7-3 17-8z"></path></svg>
-            Telegram
+        <a class="sticky-contact__btn" href="https://max.ru/u/f9LHodD0cOJVi8ozRnjQXsNgjsNBQIpNjqlxYQ35V9ESvxToKtF8as_AKPQ" target="_blank" rel="noopener noreferrer" aria-label="MAX">
+            <svg viewBox="0 0 24 24" style="stroke-width:1.0;transform:scale(1.1);transform-origin:50% 50%;">
+                <path d="M12 3.8c-4.86 0-8.8 3.43-8.8 7.67 0 2.25 1.1 4.34 2.95 5.78L6 20.2l2.77-1.54c.98.29 2.05.45 3.23.45 4.86 0 8.8-3.43 8.8-7.67S16.86 3.8 12 3.8Zm0 2.3c3.6 0 6.5 2.26 6.5 5.37 0 3.12-2.9 5.37-6.5 5.37-.92 0-1.78-.14-2.56-.4l-.74-.24-1.04.58.2-1.24-.52-.44c-1.35-1.15-2.1-2.6-2.1-4.2 0-3.11 2.9-5.37 6.5-5.37Z"></path>
+            </svg>
+            MAX
         </a>
         <a class="sticky-contact__btn" href="mailto:FONikitin@bk.ru" aria-label="Написать Email">
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16v12H4z"></path><path d="M4 7l8 6 8-6"></path></svg>
@@ -2328,6 +2335,9 @@ document.addEventListener('DOMContentLoaded', function () {
             document.documentElement.lang = lang;
             ruBtn.classList.toggle('active', lang === 'ru');
             enBtn.classList.toggle('active', lang === 'en');
+            document.querySelectorAll('.mobile-lang button[data-lang]').forEach(function (btn) {
+                btn.classList.toggle('active', btn.dataset.lang === lang);
+            });
             try { localStorage.setItem(STORAGE_KEY, lang); } catch (e) {}
 
             walkTextNodes(document.body, function (node) {
@@ -2353,6 +2363,10 @@ document.addEventListener('DOMContentLoaded', function () {
         ruBtn.__ruTitle = document.title;
         ruBtn.addEventListener('click', function () { applyLanguage('ru'); });
         enBtn.addEventListener('click', function () { applyLanguage('en'); });
+
+        document.querySelectorAll('.mobile-lang [data-lang]').forEach(function (btn) {
+            btn.addEventListener('click', function () { applyLanguage(this.dataset.lang); });
+        });
 
         var initial = 'ru';
         try {
