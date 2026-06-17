@@ -1248,13 +1248,14 @@
                     radial-gradient(1000px 700px at 50% -10%, rgba(0,0,0,.20), rgba(3,33,26,.88) 55%),
                     linear-gradient(180deg, rgba(3,33,26,.62) 0%, rgba(3,33,26,.94) 100%);
             }
-            .expert-card, .job-card, .skills-group, .c-card, .skill-card { background: rgba(3,33,26,.75) !important; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,.08) !important; }
-            .case-accordion { background: rgba(3,33,26,.75) !important; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
-            .manifesto-blockquote { background: rgba(3,33,26,.72) !important; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
-            .looking-for { background: rgba(3,33,26,.72) !important; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
-            .skill-tag { background: rgba(255,255,255,.13) !important; }
-            .looking-tag { background: rgba(255,255,255,.09) !important; }
-            .hero-role { background: rgba(3,33,26,.6) !important; }
+            .expert-card, .job-card, .skills-group, .c-card, .skill-card,
+            .case-accordion, .manifesto-blockquote, .looking-for,
+            .contacts-section, .hero-under, .hero-role {
+                background: rgba(3,33,26,.7) !important;
+                backdrop-filter: blur(12px) !important;
+                -webkit-backdrop-filter: blur(12px) !important;
+                border: 1px solid rgba(255,255,255,.08) !important;
+            }
             header { display: none; }
             .mobile-lang { display: flex; justify-content: center; gap: 6px; padding: 12px 0 6px; }
             .mobile-lang button {
